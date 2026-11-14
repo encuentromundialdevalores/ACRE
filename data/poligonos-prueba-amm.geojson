@@ -1,0 +1,725 @@
+{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "TEST-01",
+    "name": "Polígono de prueba 01",
+    "municipality": "Monterrey",
+    "target_m2": 800
+   },
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -100.3162303,
+       25.6864775
+      ],
+      [
+       -100.3159653,
+       25.6864682
+      ],
+      [
+       -100.315955,
+       25.686735
+      ],
+      [
+       -100.3162317,
+       25.6867255
+      ],
+      [
+       -100.3162303,
+       25.6864775
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "TEST-02",
+    "name": "Polígono de prueba 02",
+    "municipality": "Monterrey",
+    "target_m2": 500
+   },
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -100.2897042,
+       25.6512039
+      ],
+      [
+       -100.2894868,
+       25.6511986
+      ],
+      [
+       -100.2894847,
+       25.6514037
+      ],
+      [
+       -100.28971,
+       25.6513996
+      ],
+      [
+       -100.2897042,
+       25.6512039
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "TEST-03",
+    "name": "Polígono de prueba 03",
+    "municipality": "Monterrey",
+    "target_m2": 3500
+   },
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -100.3483095,
+       25.7182553
+      ],
+      [
+       -100.3476906,
+       25.7182259
+      ],
+      [
+       -100.3477126,
+       25.7187511
+      ],
+      [
+       -100.3483165,
+       25.7187588
+      ],
+      [
+       -100.3483095,
+       25.7182553
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "TEST-04",
+    "name": "Polígono de prueba 04",
+    "municipality": "Monterrey",
+    "target_m2": 800
+   },
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -100.3746382,
+       25.6700758
+      ],
+      [
+       -100.3743626,
+       25.6700777
+      ],
+      [
+       -100.3743693,
+       25.6703262
+      ],
+      [
+       -100.3746325,
+       25.6703356
+      ],
+      [
+       -100.3746382,
+       25.6700758
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "TEST-05",
+    "name": "Polígono de prueba 05",
+    "municipality": "San Pedro Garza García",
+    "target_m2": 800
+   },
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -100.4028421,
+       25.6570663
+      ],
+      [
+       -100.4025564,
+       25.6570656
+      ],
+      [
+       -100.4025573,
+       25.6573312
+      ],
+      [
+       -100.4028307,
+       25.6573215
+      ],
+      [
+       -100.4028421,
+       25.6570663
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "TEST-06",
+    "name": "Polígono de prueba 06",
+    "municipality": "San Pedro Garza García",
+    "target_m2": 3500
+   },
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -100.3623177,
+       25.6487192
+      ],
+      [
+       -100.3616879,
+       25.6487394
+      ],
+      [
+       -100.3617074,
+       25.6492799
+      ],
+      [
+       -100.3622789,
+       25.6492596
+      ],
+      [
+       -100.3623177,
+       25.6487192
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "TEST-07",
+    "name": "Polígono de prueba 07",
+    "municipality": "San Pedro Garza García",
+    "target_m2": 3500
+   },
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -100.4353043,
+       25.6677265
+      ],
+      [
+       -100.4347254,
+       25.6677285
+      ],
+      [
+       -100.4347036,
+       25.6682549
+      ],
+      [
+       -100.435293,
+       25.6682559
+      ],
+      [
+       -100.4353043,
+       25.6677265
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "TEST-08",
+    "name": "Polígono de prueba 08",
+    "municipality": "Guadalupe",
+    "target_m2": 15000
+   },
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -100.256583,
+       25.6764654
+      ],
+      [
+       -100.2553634,
+       25.676489
+      ],
+      [
+       -100.2553582,
+       25.6775769
+      ],
+      [
+       -100.2566007,
+       25.6775119
+      ],
+      [
+       -100.256583,
+       25.6764654
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "TEST-09",
+    "name": "Polígono de prueba 09",
+    "municipality": "Guadalupe",
+    "target_m2": 20000
+   },
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -100.2197473,
+       25.6893836
+      ],
+      [
+       -100.2182776,
+       25.6893754
+      ],
+      [
+       -100.2182484,
+       25.690631
+      ],
+      [
+       -100.2196784,
+       25.6906095
+      ],
+      [
+       -100.2197473,
+       25.6893836
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "TEST-10",
+    "name": "Polígono de prueba 10",
+    "municipality": "Guadalupe",
+    "target_m2": 15000
+   },
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -100.241614,
+       25.6414282
+      ],
+      [
+       -100.2403968,
+       25.6414425
+      ],
+      [
+       -100.2404033,
+       25.6425939
+      ],
+      [
+       -100.2415749,
+       25.6425495
+      ],
+      [
+       -100.241614,
+       25.6414282
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "TEST-11",
+    "name": "Polígono de prueba 11",
+    "municipality": "San Nicolás de los Garza",
+    "target_m2": 500
+   },
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -100.3021179,
+       25.7419051
+      ],
+      [
+       -100.3018946,
+       25.7418967
+      ],
+      [
+       -100.3018868,
+       25.7420986
+      ],
+      [
+       -100.3021132,
+       25.7420999
+      ],
+      [
+       -100.3021179,
+       25.7419051
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "TEST-12",
+    "name": "Polígono de prueba 12",
+    "municipality": "San Nicolás de los Garza",
+    "target_m2": 3500
+   },
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -100.2653173,
+       25.7647189
+      ],
+      [
+       -100.264728,
+       25.7647249
+      ],
+      [
+       -100.2646964,
+       25.7652673
+      ],
+      [
+       -100.265284,
+       25.7652717
+      ],
+      [
+       -100.2653173,
+       25.7647189
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "TEST-13",
+    "name": "Polígono de prueba 13",
+    "municipality": "San Nicolás de los Garza",
+    "target_m2": 800
+   },
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -100.2801364,
+       25.7298799
+      ],
+      [
+       -100.2798702,
+       25.7298684
+      ],
+      [
+       -100.279854,
+       25.7301366
+      ],
+      [
+       -100.2801469,
+       25.7301272
+      ],
+      [
+       -100.2801364,
+       25.7298799
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "TEST-14",
+    "name": "Polígono de prueba 14",
+    "municipality": "Apodaca",
+    "target_m2": 800
+   },
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -100.1881494,
+       25.7808771
+      ],
+      [
+       -100.1878558,
+       25.7808707
+      ],
+      [
+       -100.1878668,
+       25.7811324
+      ],
+      [
+       -100.188142,
+       25.7811327
+      ],
+      [
+       -100.1881494,
+       25.7808771
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "TEST-15",
+    "name": "Polígono de prueba 15",
+    "municipality": "Apodaca",
+    "target_m2": 15000
+   },
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -100.2246517,
+       25.7554412
+      ],
+      [
+       -100.2233903,
+       25.7554841
+      ],
+      [
+       -100.2234026,
+       25.7565928
+      ],
+      [
+       -100.2246408,
+       25.7565272
+      ],
+      [
+       -100.2246517,
+       25.7554412
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "TEST-16",
+    "name": "Polígono de prueba 16",
+    "municipality": "Escobedo",
+    "target_m2": 2000
+   },
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -100.3202366,
+       25.7957848
+      ],
+      [
+       -100.3197917,
+       25.7957996
+      ],
+      [
+       -100.3197923,
+       25.7962092
+      ],
+      [
+       -100.3202326,
+       25.7961889
+      ],
+      [
+       -100.3202366,
+       25.7957848
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "TEST-17",
+    "name": "Polígono de prueba 17",
+    "municipality": "Escobedo",
+    "target_m2": 10000
+   },
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -100.3575346,
+       25.8075749
+      ],
+      [
+       -100.3564989,
+       25.8075432
+      ],
+      [
+       -100.356464,
+       25.80848
+      ],
+      [
+       -100.3575193,
+       25.8084628
+      ],
+      [
+       -100.3575346,
+       25.8075749
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "TEST-18",
+    "name": "Polígono de prueba 18",
+    "municipality": "Santa Catarina",
+    "target_m2": 3500
+   },
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -100.4582901,
+       25.672727
+      ],
+      [
+       -100.4577111,
+       25.6727173
+      ],
+      [
+       -100.4577075,
+       25.673255
+      ],
+      [
+       -100.4582743,
+       25.6732454
+      ],
+      [
+       -100.4582901,
+       25.672727
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "TEST-19",
+    "name": "Polígono de prueba 19",
+    "municipality": "Santa Catarina",
+    "target_m2": 15000
+   },
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -100.4905841,
+       25.6894745
+      ],
+      [
+       -100.4894315,
+       25.6894384
+      ],
+      [
+       -100.489416,
+       25.6905858
+      ],
+      [
+       -100.4906456,
+       25.6905123
+      ],
+      [
+       -100.4905841,
+       25.6894745
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "TEST-20",
+    "name": "Polígono de prueba 20",
+    "municipality": "García",
+    "target_m2": 2000
+   },
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -100.5902152,
+       25.8097996
+      ],
+      [
+       -100.5897755,
+       25.809792
+      ],
+      [
+       -100.5897632,
+       25.8102033
+      ],
+      [
+       -100.590214,
+       25.8102
+      ],
+      [
+       -100.5902152,
+       25.8097996
+      ]
+     ]
+    ]
+   }
+  }
+ ]
+}
