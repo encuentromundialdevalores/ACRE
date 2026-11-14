@@ -81,3 +81,16 @@ describe("modo demostración", () => {
     expect(a.some((f) => /INEGI|Google|CENAPRED/i.test(f.source))).toBe(false);
   });
 });
+
+describe("DENUE sin resultados", () => {
+  afterEach(() => vi.unstubAllGlobals());
+  it("convierte 'No hay resultados.' en 0 confirmado", async () => {
+    process.env.INEGI_DENUE_TOKEN = "t";
+    vi.stubGlobal("fetch", vi.fn(async () => new Response("No hay resultados.", { status: 200 })));
+    const { denueConnector } = await import("@/lib/connectors/denue");
+    const out = await denueConnector.run({ point: { lat: 25.7, lng: -100.3 }, radiusM: 500, signal: new AbortController().signal } as unknown as ConnectorInput);
+    const count = out.fields.find((f) => f.fieldKey === "denue_comercios_500m");
+    expect(count?.status).toBe("CONFIRMADO");
+    expect(count?.value).toBe("0");
+  });
+});

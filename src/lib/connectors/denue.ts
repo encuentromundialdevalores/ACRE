@@ -40,7 +40,13 @@ export const denueConnector: Connector = {
       if (e instanceof ConnectorError && e.kind === "invalid_response" && /No Autorizado/i.test(e.message)) {
         throw new ConnectorError("INEGI rechazó el token de DENUE", "auth");
       }
-      throw e;
+      // Sin establecimientos en el radio, DENUE responde texto plano "No hay resultados." con HTTP 200.
+      // Es una respuesta válida de la fuente: se registra 0 confirmado, no un fallo.
+      if (e instanceof ConnectorError && e.kind === "invalid_response" && /No hay resultados/i.test(e.message)) {
+        rows = [];
+      } else {
+        throw e;
+      }
     }
     if (!Array.isArray(rows)) throw new ConnectorError("DENUE devolvió un formato inesperado", "invalid_response");
 
