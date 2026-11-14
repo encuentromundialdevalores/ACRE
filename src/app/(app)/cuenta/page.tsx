@@ -24,7 +24,7 @@ export default async function AccountPage() {
             <div><dt className="label">Modo de datos</dt><dd><Badge tone={mode === "DEMO" ? "violet" : "green"}>{mode === "DEMO" ? "Demostración (datos sintéticos)" : "Real (APIs oficiales)"}</Badge></dd></div>
             <div><dt className="label">Conectores</dt><dd><ul className="mt-1 space-y-1">{REAL_CONNECTORS.map((c) => { const r = c.notConfiguredReason(); return <li key={c.id} className="flex items-center justify-between gap-2 rounded-md border border-line px-2.5 py-1.5"><span>{c.label}</span><Badge tone={r ? "amber" : "green"}>{r ? "Sin credenciales" : "Configurado"}</Badge></li>; })}</ul></dd></div>
             <div><dt className="label">Almacenamiento</dt><dd>{process.env.STORAGE_DRIVER === "vercel-blob" ? "Vercel Blob (privado)" : "Disco local (desarrollo)"}</dd></div>
-            <div><dt className="label">Límite por fuente</dt><dd>{Number(process.env.CONNECTOR_TIMEOUT_MS ?? 30000) / 1000} s · caché {process.env.CONNECTOR_CACHE_TTL_HOURS ?? 24} h</dd></div>
+            <div><dt className="label">Límite por fuente</dt><dd>{Number(process.env.CONNECTOR_TIMEOUT_MS ?? 60000) / 1000} s · caché {process.env.CONNECTOR_CACHE_TTL_HOURS ?? 24} h</dd></div>
           </dl>
         </Card>
       )}

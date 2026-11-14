@@ -63,14 +63,14 @@ Ver `.env.example`. Resumen:
 | `INEGI_DENUE_TOKEN` | Token gratuito de INEGI para la API DENUE. |
 | `GOOGLE_MAPS_API_KEY` | Clave con Geocoding API y Places API (New) habilitadas. |
 | `ANR_*` | Endpoints ArcGIS del Atlas Nacional de Riesgos (sin credenciales; valores verificados por defecto). |
-| `CONNECTOR_TIMEOUT_MS` / `CONNECTOR_CACHE_TTL_HOURS` | Límite por fuente (30 s) y vigencia de caché. |
+| `CONNECTOR_TIMEOUT_MS` / `CONNECTOR_CACHE_TTL_HOURS` | Límite por fuente (60 s) y vigencia de caché. |
 | `STORAGE_DRIVER` | `local` (disco, desarrollo) o `vercel-blob` (requiere `BLOB_READ_WRITE_TOKEN` y un store **privado**). |
 
 Las credenciales sólo se usan en el servidor; nunca llegan al navegador.
 
 ## Modos de datos
 
-- **Real**: cada conector consulta su API oficial. Si falta una credencial, sus campos quedan **Pendiente** con la razón. Si una fuente no responde en 30 s, el dato queda **Pendiente** (nunca se convierte en "sin riesgo" o "0 establecimientos"). Si la fuente confirma que no tiene el dato, queda **No disponible**.
+- **Real**: cada conector consulta su API oficial. Si falta una credencial, sus campos quedan **Pendiente** con la razón. Si una fuente no responde en 60 s, el dato queda **Pendiente** (nunca se convierte en "sin riesgo" o "0 establecimientos"). Si la fuente confirma que no tiene el dato, queda **No disponible**.
 - **Demo**: todos los conectores devuelven datos sintéticos deterministas marcados como **Demostrativo**, con fuente "Datos sintéticos de demostración". No se atribuyen a ninguna institución y el expediente nunca se muestra como "Completo", sino como "Completo (demostración)".
 
 La superficie siempre se calcula realmente con Turf.js, en ambos modos.
@@ -86,7 +86,7 @@ Socio inicia sesión → registra terreno (dibuja o importa polígono, superfici
 3. Crea un Blob store **privado** y define `STORAGE_DRIVER=vercel-blob` + `BLOB_READ_WRITE_TOKEN`.
 4. Define `AUTH_SECRET`, `AUTH_URL=https://<dominio>`, `DATA_MODE`, `INEGI_DENUE_TOKEN`, `GOOGLE_MAPS_API_KEY`.
 5. Ejecuta las migraciones contra Neon: `DATABASE_URL=... npm run db:migrate && npm run db:seed`.
-6. Despliega. La ruta `/api/terrenos/[id]/consultar` declara `maxDuration = 60` para tolerar fuentes lentas.
+6. Despliega. La ruta `/api/terrenos/[id]/consultar` declara `maxDuration = 90` para tolerar fuentes lentas.
 
 ## Estructura
 

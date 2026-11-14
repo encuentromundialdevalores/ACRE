@@ -29,7 +29,7 @@ export function RunQueriesButton({ propertyId, hasGeometry }: { propertyId: stri
         <button className="btn-accent" disabled={loading || !hasGeometry} onClick={() => run(false)} title={hasGeometry ? "" : "Dibuja el polígono antes de consultar"}>{loading ? <Spinner /> : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 12a8 8 0 0 1 14-5l2 2M20 4v5h-5M20 12a8 8 0 0 1-14 5l-2-2M4 20v-5h5" /></svg>}{loading ? "Consultando fuentes…" : "Ejecutar consultas"}</button>
         <button className="btn-secondary" disabled={loading || !hasGeometry} onClick={() => run(true)} title="Ignorar caché">Sin caché</button>
       </div>
-      {loading && <p className="text-xs text-ink-muted">Cada fuente tiene un límite de 30 s. Las que no respondan quedarán como pendientes.</p>}
+      {loading && <p className="text-xs text-ink-muted">Cada fuente tiene un límite de 60 s. Las que no respondan quedarán como pendientes.</p>}
       {summary && (
         <ul className="w-full max-w-md space-y-1 text-xs">
           {summary.providers.map((p) => <li key={p.id} className="flex items-center justify-between gap-2 rounded-md border border-line px-2.5 py-1.5"><span>{p.label}</span><span className="flex items-center gap-2 text-ink-muted"><span>{(p.durationMs / 1000).toFixed(1)} s</span><Badge tone={p.status === "ok" || p.status === "cache" ? "green" : p.status === "not_configured" ? "slate" : "amber"}>{{ ok: "OK", cache: "Caché", error: "Error", timeout: "Tiempo agotado", not_configured: "Sin configurar" }[p.status]}</Badge></span></li>)}

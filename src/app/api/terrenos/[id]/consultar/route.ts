@@ -3,7 +3,7 @@ import { requireApiUser, HttpError } from "@/lib/session";
 import { loadPropertyFor } from "@/lib/services/access";
 import { runIntegration } from "@/lib/connectors/runner";
 
-export const maxDuration = 60;
+export const maxDuration = 90;
 
 export const POST = withApi(async (req: Request, { params }: { params: { id: string } }) => {
   const user = await requireApiUser();

@@ -26,10 +26,10 @@ describe("executeConnector (manejo de fallos)", () => {
     expect(r.fields).toHaveLength(2);
     for (const f of r.fields) { expect(f.status).toBe("PENDIENTE"); expect(f.value).toBeNull(); }
   });
-  it("tiempo de espera superado → PENDIENTE con nota de 30 s", async () => {
+  it("tiempo de espera superado → PENDIENTE con nota del límite configurado", async () => {
     const r = await executeConnector(fakeConnector((input: ConnectorInput) => new Promise((_, rej) => input.signal.addEventListener("abort", () => rej(new ConnectorError("abort", "timeout"))))), base, { useCache: false });
     expect(r.status).toBe("timeout");
-    expect(r.fields[0].notes).toMatch(/30 s/);
+    expect(r.fields[0].notes).toMatch(/límite de 0.05 s/);
   });
   it("credenciales inválidas → PENDIENTE con el motivo", async () => {
     const r = await executeConnector(fakeConnector(async () => { throw new ConnectorError("token rechazado", "auth"); }), base, { useCache: false });

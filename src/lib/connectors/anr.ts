@@ -125,7 +125,7 @@ export const anrConnector: Connector = {
   fields: ["riesgo_inundacion", "riesgo_sismico", "riesgo_laderas"],
   notConfiguredReason: () => null,
   async run(input: ConnectorInput): Promise<ConnectorOutput> {
-    const perTaskMs = Math.max(5_000, Number(process.env.CONNECTOR_TIMEOUT_MS ?? 30_000) - 2_000);
+    const perTaskMs = Math.max(5_000, Number(process.env.CONNECTOR_TIMEOUT_MS ?? 60_000) - 2_000);
     const sub = () => ({ ...input, signal: withOwnDeadline(input.signal, perTaskMs) });
     const tasks: { key: FieldResult["fieldKey"]; fn: () => Promise<FieldResult> }[] = [
       { key: "riesgo_inundacion", fn: () => flood(sub()) },
@@ -140,7 +140,7 @@ export const anrConnector: Connector = {
       return {
         fieldKey: tasks[i].key, status: "PENDIENTE" as const, value: null, source: SOURCE, sourceUrl: ANR_PORTAL,
         notes: timeout
-          ? "La capa del Atlas Nacional de Riesgos no respondió dentro del límite de 30 s. Vuelve a ejecutar la consulta más tarde."
+          ? `La capa del Atlas Nacional de Riesgos no respondió dentro del límite de ${Math.round((perTaskMs + 2_000) / 1000)} s. Vuelve a ejecutar la consulta más tarde.`
           : `No fue posible consultar la fuente: ${err.message}`,
       } satisfies FieldResult;
     });

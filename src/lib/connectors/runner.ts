@@ -7,7 +7,7 @@ import { PROXIMITY_RADIUS_M } from "./fields";
 import { connectorsForMode, currentDataMode, type DataMode } from "./index";
 import { ConnectorError, type Connector, type ConnectorInput, type FieldResult } from "./types";
 
-export const TIMEOUT_MS = () => Number(process.env.CONNECTOR_TIMEOUT_MS ?? 30_000);
+export const TIMEOUT_MS = () => Number(process.env.CONNECTOR_TIMEOUT_MS ?? 60_000);
 const CACHE_TTL_MS = () => Number(process.env.CONNECTOR_CACHE_TTL_HOURS ?? 24) * 3_600_000;
 
 export type RunSummary = {
@@ -57,7 +57,7 @@ export async function executeConnector(connector: Connector, base: Omit<Connecto
   try {
     const out = await Promise.race([
       connector.run({ ...base, signal: controller.signal }),
-      new Promise<never>((_, reject) => controller.signal.addEventListener("abort", () => reject(new ConnectorError("La consulta superó el tiempo límite de 30 s", "timeout")))),
+      new Promise<never>((_, reject) => controller.signal.addEventListener("abort", () => reject(new ConnectorError(`La consulta superó el tiempo límite de ${TIMEOUT_MS() / 1000} s`, "timeout")))),
     ]);
     // Garantiza que cada campo prometido tenga un resultado.
     const missing = connector.fields.filter((k) => !out.fields.some((f) => f.fieldKey === k));
@@ -68,7 +68,7 @@ export async function executeConnector(connector: Connector, base: Omit<Connecto
     const err = e as Error;
     const isTimeout = err instanceof ConnectorError && err.kind === "timeout";
     const note = isTimeout
-      ? "La fuente no respondió dentro del límite de 30 s. El dato queda pendiente; vuelve a ejecutar la consulta."
+      ? `La fuente no respondió dentro del límite de ${TIMEOUT_MS() / 1000} s. El dato queda pendiente; vuelve a ejecutar la consulta.`
       : `No fue posible completar la consulta: ${err.message}`;
     return { fields: pendingAll(note), status: isTimeout ? ("timeout" as const) : ("error" as const), durationMs: Date.now() - started, message: err.message, cacheHit: false };
   } finally {
