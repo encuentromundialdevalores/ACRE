@@ -30,7 +30,7 @@ export function CommercialSection({ data, pub = false }: { data: DataMap; pub?: 
   const topJson = top?.valueJson as { top?: { activity: string; count: number }[] } | undefined;
   const max = topJson?.top?.[0]?.count ?? 0;
   return (
-    <Card title={pub ? "Entorno comercial" : "C. Entorno comercial"} description={pub ? `Negocios registrados a ${PROXIMITY_RADIUS_M} m del terreno.` : `Unidades económicas en un radio de ${PROXIMITY_RADIUS_M} m alrededor del punto representativo (DENUE).`}>
+    <Card title={pub ? "Entorno comercial" : "Entorno comercial"} description={pub ? `Negocios registrados a ${PROXIMITY_RADIUS_M} m del terreno.` : `Unidades económicas en un radio de ${PROXIMITY_RADIUS_M} m alrededor del punto representativo (DENUE).`}>
       <div className="grid gap-6 md:grid-cols-[200px_1fr]">
         <div className="rounded-2xl bg-brand-50 p-5"><p className="text-xs font-medium uppercase tracking-wide text-brand-700">{pub ? "Negocios cercanos" : "Unidades económicas"}</p><p className="mt-1 font-display text-5xl font-black tracking-[-0.05em] text-ink">{count?.value ?? "—"}</p><p className="text-xs text-brand-700/80">a {PROXIMITY_RADIUS_M} m</p>{count && <div className="mt-2"><StatusBadge status={count.verificationStatus} isDemo={count.isDemo} /></div>}</div>
         <div>
@@ -73,7 +73,7 @@ function NearbyCard({ title, datum, pub = false }: { title: string; datum?: Prop
 
 export function ServicesSection({ data, pub = false }: { data: DataMap; pub?: boolean }) {
   return (
-    <Card title={pub ? "Servicios cercanos" : "D. Servicios y amenidades"} description={pub ? `Escuelas, hospitales y transporte público a ${PROXIMITY_RADIUS_M} m.` : `Escuelas, hospitales/clínicas y transporte público en ${PROXIMITY_RADIUS_M} m (Google Places).`}>
+    <Card title={pub ? "Servicios cercanos" : "Servicios y amenidades"} description={pub ? `Escuelas, hospitales y transporte público a ${PROXIMITY_RADIUS_M} m.` : `Escuelas, hospitales/clínicas y transporte público en ${PROXIMITY_RADIUS_M} m (Google Places).`}>
       <div className="grid gap-4 md:grid-cols-3">
         <NearbyCard title="Escuelas" datum={data.escuelas} pub={pub} />
         <NearbyCard title="Hospitales y clínicas" datum={data.hospitales} pub={pub} />
@@ -93,7 +93,7 @@ export function riskTone(v: string | null | undefined) {
 export function RisksSection({ data, pub = false }: { data: DataMap; pub?: boolean }) {
   const items: { key: FieldKey; title: string }[] = [{ key: "riesgo_inundacion", title: "Inundación" }, { key: "riesgo_sismico", title: "Sísmico" }, { key: "riesgo_laderas", title: "Deslizamiento de laderas" }];
   return (
-    <Card title={pub ? "Riesgos naturales" : "E. Riesgos naturales"} description={pub ? "Nivel de peligro oficial para la zona. Un dato pendiente no significa que no haya riesgo." : "Niveles de peligro según la clasificación publicada por el Atlas Nacional de Riesgos (CENAPRED). Un dato pendiente no significa ausencia de riesgo."}>
+    <Card title={pub ? "Riesgos naturales" : "Riesgos naturales"} description={pub ? "Nivel de peligro oficial para la zona. Un dato pendiente no significa que no haya riesgo." : "Niveles de peligro según la clasificación publicada por el Atlas Nacional de Riesgos (CENAPRED). Un dato pendiente no significa ausencia de riesgo."}>
       <div className="grid gap-4 md:grid-cols-3">
         {items.map(({ key, title }) => {
           const d = data[key];
@@ -117,7 +117,7 @@ export function SourcesSection({ rows }: { rows: PropertyDatum[] }) {
   const sorted = [...rows].sort((a, b) => (FIELD_DEFS[a.fieldKey as FieldKey]?.order ?? 99) - (FIELD_DEFS[b.fieldKey as FieldKey]?.order ?? 99));
   const missing = FIELD_KEYS.filter((k) => !rows.some((r) => r.fieldKey === k));
   return (
-    <Card title="G. Fuentes y verificaciones" description="Fuente, fecha de consulta, estado y observaciones de cada dato (campos 11 y 12 del expediente).">
+    <Card title="Fuentes y verificaciones" description="De dónde viene cada dato, cuándo se consultó y si está confirmado.">
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead><tr className="border-b border-line text-left text-xs uppercase tracking-wide text-ink-subtle"><th className="py-2 pr-3 font-medium">#</th><th className="py-2 pr-3 font-medium">Campo</th><th className="py-2 pr-3 font-medium">Valor</th><th className="py-2 pr-3 font-medium">Fuente</th><th className="py-2 pr-3 font-medium">Fecha de consulta</th><th className="py-2 pr-3 font-medium">Estado</th></tr></thead>

@@ -28,7 +28,7 @@ export function RunQueriesButton({ propertyId, hasGeometry }: { propertyId: stri
     <div className="flex flex-col items-end gap-2">
       <div className="flex gap-2">
         <button className="btn-accent" disabled={loading || !hasGeometry} onClick={() => run(false)} title={hasGeometry ? "" : "Dibuja el polígono antes de consultar"}>{loading ? <Spinner /> : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 12a8 8 0 0 1 14-5l2 2M20 4v5h-5M20 12a8 8 0 0 1-14 5l-2-2M4 20v-5h5" /></svg>}{loading ? "Consultando fuentes…" : "Ejecutar consultas"}</button>
-        <button className="btn-secondary" disabled={loading || !hasGeometry} onClick={() => run(true)} title="Ignorar caché">Sin caché</button>
+        <button className="btn-secondary" disabled={loading || !hasGeometry} onClick={() => run(true)} title="Ignora los resultados guardados de las últimas 24 h y vuelve a preguntar a cada fuente. Úsalo si un dato quedó pendiente o crees que cambió.">Actualizar todo</button>
       </div>
       {loading && <p className="text-xs text-ink-muted">Cada fuente tiene un límite de 60 s. Las que no respondan quedarán como pendientes.</p>}
       {summary && (
