@@ -25,10 +25,10 @@ export default async function ExpedientesPage() {
           { label: "Sin consultar", value: groups.sin.length, dot: "bg-brand-500" },
         ]}
       />
-      <div className="space-y-6">
+      <div className="space-y-10">
         {sections.length === 0
           ? <Card><EmptyState title="Aún no hay expedientes" description="Registra un terreno para crear su expediente." action={{ href: "/terrenos/nuevo", label: "Registrar terreno" }} /></Card>
-          : sections.map((g) => <Card key={g.key} title={g.title} description={g.description}><PropertyTable items={g.items} emptyAction={false} /></Card>)}
+          : sections.map((g) => <section key={g.key}><h2 className="font-display text-2xl font-extrabold tracking-[-0.03em]">{g.title} <span className="text-ink-subtle">{g.items.length}</span></h2><p className="mb-4 text-sm text-ink-muted">{g.description}</p><PropertyTable items={g.items} emptyAction={false} /></section>)}
       </div>
     </div>
   );

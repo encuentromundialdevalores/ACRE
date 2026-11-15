@@ -83,8 +83,8 @@ export function ServicesSection({ data, pub = false }: { data: DataMap; pub?: bo
   );
 }
 
-const RISK_TONE: Record<string, string> = { "muy bajo": "bg-emerald-50 text-emerald-800", baja: "bg-emerald-50 text-emerald-800", bajo: "bg-emerald-50 text-emerald-800", medio: "bg-amber-50 text-amber-800", media: "bg-amber-50 text-amber-800", alto: "bg-orange-50 text-orange-800", alta: "bg-orange-50 text-orange-800", "muy alto": "bg-red-50 text-red-800", "muy alta": "bg-red-50 text-red-800" };
-function riskTone(v: string | null | undefined) {
+const RISK_TONE: Record<string, string> = { "muy bajo": "bg-emerald-100 text-emerald-900", baja: "bg-emerald-100 text-emerald-900", bajo: "bg-emerald-100 text-emerald-900", medio: "bg-amber-100 text-amber-900", media: "bg-amber-100 text-amber-900", alto: "bg-orange-200 text-orange-950", alta: "bg-orange-200 text-orange-950", "muy alto": "bg-red-200 text-red-950", "muy alta": "bg-red-200 text-red-950" };
+export function riskTone(v: string | null | undefined) {
   const s = (v ?? "").toLowerCase();
   const k = Object.keys(RISK_TONE).sort((a, b) => b.length - a.length).find((k) => s.includes(k));
   return k ? RISK_TONE[k] : "bg-slate-100 text-slate-700";

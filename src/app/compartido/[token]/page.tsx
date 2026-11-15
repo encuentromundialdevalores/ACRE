@@ -6,7 +6,8 @@ import { PROXIMITY_RADIUS_M } from "@/lib/connectors/fields";
 import { Card, formatDate } from "@/components/ui";
 import { PolygonViewer } from "@/components/map";
 import { Cerro, Logo } from "@/components/brand";
-import { CommercialSection, RisksSection, ServicesSection, toDataMap } from "@/components/expediente/sections";
+import { toDataMap } from "@/components/expediente/sections";
+import { Glance, Nearby } from "@/components/expediente/glance";
 
 export const dynamic = "force-dynamic";
 
@@ -57,11 +58,15 @@ export default async function SharedPage({ params }: { params: { token: string }
         <Cerro className="pointer-events-none absolute inset-x-0 bottom-0 h-24 w-full sm:h-32" tone="white" />
       </section>
 
-      <main className="mx-auto -mt-2 max-w-6xl space-y-6 px-4 pb-16 sm:px-6">
-        <Card title="Ubicación"><PolygonViewer feature={polygon} point={point} radiusM={PROXIMITY_RADIUS_M} height={420} /></Card>
-        <CommercialSection data={data} pub />
-        <ServicesSection data={data} pub />
-        <RisksSection data={data} pub />
+      <main className="mx-auto -mt-2 max-w-6xl space-y-8 px-4 pb-16 sm:px-6">
+        <section>
+          <h2 className="mb-4 font-display text-2xl font-extrabold tracking-[-0.03em]">De un vistazo</h2>
+          <Glance data={data} />
+        </section>
+        <section className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
+          <div className="card overflow-hidden p-2"><PolygonViewer feature={polygon} point={point} radiusM={PROXIMITY_RADIUS_M} height={460} /></div>
+          <Nearby data={data} />
+        </section>
         {prop.documents.length > 0 && (
           <Card title="Fotos y documentos">
             <div className="space-y-4">

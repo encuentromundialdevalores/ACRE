@@ -11,9 +11,12 @@ import { integrationTimeline } from "@/lib/services/dashboard";
 import { normalizePolygon, formatArea } from "@/lib/geo";
 import { PROXIMITY_RADIUS_M } from "@/lib/connectors/fields";
 import { currentDataMode } from "@/lib/connectors";
-import { Card, Badge, Alert, formatDate } from "@/components/ui";
+import { Badge, Alert, PageHero, formatDate } from "@/components/ui";
+import { Tabs, type TabItem } from "@/components/ui/tabs";
+import { Glance, Nearby } from "@/components/expediente/glance";
+import { invitationState } from "@/lib/invitation-state";
 import { PolygonViewer } from "@/components/map";
-import { CommercialSection, DatumRow, RisksSection, ServicesSection, SourcesSection, toDataMap } from "@/components/expediente/sections";
+import { SourcesSection, toDataMap } from "@/components/expediente/sections";
 import { DocumentsManager, RunQueriesButton, SharePanel } from "@/components/expediente/actions";
 
 export default async function PropertyPage({ params }: { params: { id: string } }) {
@@ -28,69 +31,68 @@ export default async function PropertyPage({ params }: { params: { id: string } 
   const status = expedienteStatus(counts);
   const timeline = await integrationTimeline(prop.id);
   const invs = can(user, "invitation.manage") ? await db.select().from(invitations).where(eq(invitations.propertyId, prop.id)).orderBy(desc(invitations.createdAt)) : [];
-  const addr = data.direccion?.valueJson as { street?: string | null; neighborhood?: string | null; municipality?: string | null } | undefined;
+  const owner = prop.owner?.name ?? null;
   const demoMode = currentDataMode() === "DEMO";
 
+  const officialAddress = data.direccion?.value ?? ([prop.address, prop.neighborhood, prop.municipality].filter(Boolean).join(", ") || null);
+  const resolved = status.key === "sin_consultar" ? 0 : status.resolved;
+  const pct = Math.round((resolved / (status.required || 10)) * 100);
+  const barTone = status.key === "completo" ? "bg-emerald-500" : status.key === "pendiente" ? "bg-amber-500" : status.key === "demo" ? "bg-violet-500" : "bg-brand-500";
+  const canShare = can(user, "invitation.manage");
+  const activeInvs = invs.filter((i) => invitationState(i) === "activa").length;
+
+  const tabs: TabItem[] = [
+    { id: "archivos", label: "Archivos", count: prop.documents.length, content: <div className="card p-6"><DocumentsManager propertyId={prop.id} documents={prop.documents} canUpload={can(user, "document.upload", prop)} canDelete={can(user, "document.delete", prop)} /></div> },
+    ...(canShare ? [{ id: "compartir", label: "Compartir", count: activeInvs, content: <div className="card p-6"><p className="mb-5 max-w-2xl text-[15px] text-ink-muted">Genera un enlace privado de solo lectura para un comprador. El comprador no ve fuentes ni datos internos. Puedes revocarlo cuando quieras.</p><SharePanel propertyId={prop.id} invitations={invs} /></div> }] : []),
+    ...(can(user, "data.review") ? [{ id: "fuentes", label: "Fuentes", content: <SourcesSection rows={prop.data} /> }] : []),
+    ...(can(user, "data.review") && timeline.runs.length > 0 ? [{ id: "historial", label: "Historial", count: timeline.runs.length, content: (
+      <div className="card p-6"><div className="grid gap-6 lg:grid-cols-2">
+        <div><p className="mb-2 text-xs font-medium text-ink-muted">Consultas ejecutadas</p><ul className="space-y-2 text-sm">{timeline.runs.map((r) => { const sm = r.summary as { byStatus?: Record<string, number> } | null; return <li key={r.id} className="flex items-center justify-between gap-3 rounded-2xl bg-canvas px-4 py-3"><span>{formatDate(r.startedAt, true)} <Badge tone={r.mode === "DEMO" ? "violet" : "brand"}>{r.mode === "DEMO" ? "Demo" : "Real"}</Badge></span><span className="text-ink-muted">{r.durationMs != null ? `${(r.durationMs / 1000).toFixed(1)} s` : "en curso"}{sm?.byStatus && ` · ${sm.byStatus.CONFIRMADO ?? 0} ok · ${sm.byStatus.PENDIENTE ?? 0} pend.`}</span></li>; })}</ul></div>
+        <div><p className="mb-2 text-xs font-medium text-ink-muted">Detalle por fuente</p><ul className="max-h-80 space-y-1.5 overflow-auto text-xs">{timeline.logs.map((l) => <li key={l.id} className="flex items-center justify-between gap-2 rounded-xl bg-canvas px-3 py-2"><span className="font-medium">{l.provider}</span><span className="truncate text-ink-muted">{l.errorMessage ?? ""}</span><span className="shrink-0">{l.status}{l.cacheHit ? " (caché)" : ""} · {l.durationMs} ms</span></li>)}</ul></div>
+      </div></div>
+    ) }] : []),
+  ];
+
   return (
-    <div className="space-y-6">
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <div className="flex flex-wrap items-center gap-2"><h2 className="page-title">{prop.name}</h2><Badge tone="brand">{prop.code}</Badge><Badge tone={status.key === "completo" ? "green" : status.key === "pendiente" ? "amber" : status.key === "demo" ? "violet" : "slate"}>{status.label}{status.key !== "sin_consultar" ? ` · ${status.resolved}/${status.required}` : ""}</Badge></div>
-          <p className="mt-1 text-sm text-ink-muted">{prop.municipality ?? "Municipio sin capturar"} · registrado {formatDate(prop.createdAt, true)}{timeline.integrationMinutes != null && ` · tiempo de integración ${timeline.integrationMinutes < 60 ? `${timeline.integrationMinutes.toFixed(1)} min` : `${(timeline.integrationMinutes / 60).toFixed(1)} h`}`}</p>
-        </div>
-        <div className="flex flex-wrap items-start gap-2">
+    <div>
+      <PageHero
+        eyebrow={`${prop.code} · ${prop.municipality ?? "Municipio sin capturar"}`}
+        title={prop.name}
+        lead={officialAddress ?? "Ejecuta las consultas para obtener la dirección oficial."}
+        actions={<>
           {can(user, "property.update", prop) && <Link href={`/terrenos/${prop.id}/editar`} className="btn-secondary">Editar</Link>}
           {can(user, "property.run_queries", prop) && <RunQueriesButton propertyId={prop.id} hasGeometry={!!polygon || !!point} />}
+        </>}
+      >
+        <div className="mt-8 flex flex-wrap items-end gap-x-12 gap-y-6">
+          <div><p className="text-sm text-ink-muted">Superficie</p><p className="font-display text-5xl font-black tracking-[-0.05em]">{formatArea(prop.areaM2)}</p></div>
+          <div className="min-w-[240px] flex-1 sm:max-w-sm">
+            <div className="flex items-baseline justify-between text-sm"><span className="text-ink-muted">Expediente</span><span className="font-semibold">{status.label} · {resolved} de {status.required || 10} datos</span></div>
+            <div className="mt-2 h-2.5 rounded-full bg-white/80"><div className={`h-2.5 rounded-full ${barTone}`} style={{ width: `${pct}%` }} /></div>
+          </div>
+          {owner && <div><p className="text-sm text-ink-muted">Propietario</p><p className="text-[15px] font-semibold">{owner}</p></div>}
         </div>
+      </PageHero>
+
+      <div className="space-y-8">
+        {status.key === "pendiente" && <Alert tone="warn">Hay datos pendientes. Vuelve a ejecutar las consultas antes de presentar este expediente como verificado.</Alert>}
+        {demoMode && counts.demo > 0 && <Alert tone="info">Modo demostración: los datos marcados como <strong>Demostrativo</strong> son sintéticos.</Alert>}
+        {!polygon && <Alert tone="warn">El terreno no tiene polígono. <Link className="underline" href={`/terrenos/${prop.id}/editar`}>Dibújalo</Link> para calcular la superficie y ejecutar las consultas.</Alert>}
+
+        <section>
+          <h2 className="mb-4 font-display text-2xl font-extrabold tracking-[-0.03em]">De un vistazo</h2>
+          <Glance data={data} />
+        </section>
+
+        <section className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
+          <div className="card overflow-hidden p-2"><PolygonViewer feature={polygon} point={point} radiusM={PROXIMITY_RADIUS_M} height={460} /></div>
+          <Nearby data={data} />
+        </section>
+
+        {prop.description && <p className="rounded-3xl bg-white px-6 py-5 text-[15px] text-ink-muted shadow-card"><span className="font-semibold text-ink">Notas: </span>{prop.description}</p>}
+
+        <section><Tabs tabs={tabs} /></section>
       </div>
-
-      {status.key === "pendiente" && <Alert tone="warn">Este expediente contiene datos pendientes. No debe presentarse como completamente verificado.</Alert>}
-      {demoMode && counts.demo > 0 && <Alert tone="info">Modo demostración: los datos marcados como <strong>Demostrativo</strong> son sintéticos y no provienen de INEGI, Google ni CENAPRED.</Alert>}
-      {!polygon && <Alert tone="warn">El terreno no tiene polígono. <Link className="underline" href={`/terrenos/${prop.id}/editar`}>Dibújalo</Link> para calcular la superficie y ejecutar las consultas.</Alert>}
-
-      <div className="grid gap-6 xl:grid-cols-[1fr_1.1fr]">
-        <Card title="A. Información general">
-          <DatumRow label="Dirección oficial (Geocoding)" datum={data.direccion}>
-            <span className="font-medium">{data.direccion?.value}</span>
-            {addr && (addr.street || addr.neighborhood || addr.municipality) && <span className="block text-xs text-ink-muted">Calle: {addr.street ?? "—"} · Colonia: {addr.neighborhood ?? "—"} · Municipio: {addr.municipality ?? "—"}</span>}
-          </DatumRow>
-          <div className="grid gap-x-6 sm:grid-cols-2">
-            <div className="py-3"><p className="text-xs font-medium uppercase tracking-wide text-ink-subtle">Dirección capturada</p><p className="mt-0.5 text-sm">{[prop.address, prop.neighborhood, prop.municipality].filter(Boolean).join(", ") || <span className="text-ink-subtle">—</span>}</p></div>
-            <div className="py-3"><p className="text-xs font-medium uppercase tracking-wide text-ink-subtle">Propietario</p><p className="mt-0.5 text-sm">{prop.owner?.name ?? <span className="text-ink-subtle">Sin asignar</span>}</p></div>
-          </div>
-          <DatumRow label="Superficie del polígono" datum={data.superficie_m2}><span className="font-display text-2xl font-extrabold tracking-[-0.03em]">{formatArea(prop.areaM2)}</span></DatumRow>
-          {prop.description && <div className="py-3"><p className="text-xs font-medium uppercase tracking-wide text-ink-subtle">Descripción</p><p className="mt-0.5 text-sm text-ink-muted">{prop.description}</p></div>}
-        </Card>
-        <Card title="B. Ubicación geográfica" description={`Polígono del terreno, punto representativo y radio de ${PROXIMITY_RADIUS_M} m usado en las consultas de proximidad.`}>
-          <PolygonViewer feature={polygon} point={point} radiusM={PROXIMITY_RADIUS_M} height={360} />
-          {point && <p className="mt-2 font-mono text-xs text-ink-subtle">Punto representativo: {point.lat.toFixed(6)}, {point.lng.toFixed(6)}</p>}
-        </Card>
-      </div>
-
-      <CommercialSection data={data} />
-      <ServicesSection data={data} />
-      <RisksSection data={data} />
-
-      <Card title="F. Documentos y fotografías" description="Archivos privados asociados al terreno.">
-        <DocumentsManager propertyId={prop.id} documents={prop.documents} canUpload={can(user, "document.upload", prop)} canDelete={can(user, "document.delete", prop)} />
-      </Card>
-
-      <SourcesSection rows={prop.data} />
-
-      {can(user, "invitation.manage") && (
-        <Card title="Compartir expediente" description="Genera un enlace privado y temporal de solo lectura para un comprador o desarrollador. Puedes revocarlo en cualquier momento.">
-          <SharePanel propertyId={prop.id} invitations={invs} />
-        </Card>
-      )}
-
-      {can(user, "data.review") && timeline.runs.length > 0 && (
-        <Card title="Historial de consultas" description="Ejecuciones del motor y registro por proveedor (duración, caché y errores).">
-          <div className="grid gap-4 lg:grid-cols-2">
-            <ul className="space-y-1 text-sm">{timeline.runs.map((r) => { const s = r.summary as { byStatus?: Record<string, number> } | null; return <li key={r.id} className="flex items-center justify-between rounded-md border border-line px-3 py-2"><span>{formatDate(r.startedAt, true)} · <Badge tone={r.mode === "DEMO" ? "violet" : "brand"}>{r.mode}</Badge></span><span className="text-xs text-ink-muted">{r.durationMs != null ? `${(r.durationMs / 1000).toFixed(1)} s` : "en curso"}{s?.byStatus && ` · ${s.byStatus.CONFIRMADO ?? 0} ok / ${s.byStatus.PENDIENTE ?? 0} pend.`}</span></li>; })}</ul>
-            <ul className="max-h-64 space-y-1 overflow-auto text-xs">{timeline.logs.map((l) => <li key={l.id} className="flex items-center justify-between gap-2 rounded-md bg-canvas px-2.5 py-1.5"><span className="font-medium">{l.provider}</span><span className="truncate text-ink-muted">{l.errorMessage ?? ""}</span><span className="shrink-0">{l.status}{l.cacheHit ? " (caché)" : ""} · {l.durationMs} ms</span></li>)}</ul>
-          </div>
-        </Card>
-      )}
     </div>
   );
 }

@@ -17,11 +17,11 @@ export default async function LoginPage({ searchParams }: { searchParams: { call
       <div className="relative z-10 mx-auto grid w-full max-w-7xl flex-1 items-center gap-10 px-4 pb-48 pt-6 sm:px-8 lg:grid-cols-[1.2fr_1fr] lg:pb-56">
         <div>
           <h1 className="font-display text-[44px] font-black leading-[0.95] tracking-[-0.045em] text-ink sm:text-6xl lg:text-7xl">
-            Cada terreno,<br />con datos que<br />se pueden verificar.
+            Vende terrenos<br />con información<br />que da confianza.
           </h1>
           <p className="mt-6 max-w-lg text-lg text-ink-muted">
-            <span className="font-medium text-ink">Dibuja el polígono, consulta INEGI, Google y el Atlas de Riesgos.</span>{" "}
-            Comparte el expediente con un enlace privado.
+            <span className="font-medium text-ink">Muestra a tus compradores ubicación, entorno y riesgos de cada terreno.</span>{" "}
+            Todo en un expediente listo para compartir.
           </p>
         </div>
 

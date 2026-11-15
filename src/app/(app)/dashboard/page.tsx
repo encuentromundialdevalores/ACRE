@@ -42,9 +42,13 @@ export default async function DashboardPage() {
           user.role === "ADMIN" ? { label: "Enlaces activos", value: s.invitationsActive, dot: "bg-brand-500" } : { label: "Sin consultar", value: s.notQueried, dot: "bg-brand-500" },
         ]}
       />
-      <Card title="Terrenos recientes" description={s.avgRunMs != null ? `Las consultas tardan ${(s.avgRunMs / 1000).toFixed(1)} s en promedio.` : undefined} actions={<Link href="/terrenos" className="btn-ghost">Ver todos →</Link>}>
+      <section>
+        <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+          <div><h2 className="font-display text-2xl font-extrabold tracking-[-0.03em]">Terrenos recientes</h2>{s.avgRunMs != null && <p className="text-sm text-ink-muted">Las consultas tardan {(s.avgRunMs / 1000).toFixed(1)} s en promedio.</p>}</div>
+          <Link href="/terrenos" className="btn-secondary">Ver todos →</Link>
+        </div>
         <PropertyTable items={s.recent} />
-      </Card>
+      </section>
     </div>
   );
 }
