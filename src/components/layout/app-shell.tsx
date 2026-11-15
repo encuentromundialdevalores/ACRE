@@ -12,6 +12,7 @@ const NAV: { href: string; label: string; roles: Role[] }[] = [
   { href: "/terrenos", label: "Terrenos", roles: ["ADMIN", "OWNER"] },
   { href: "/expedientes", label: "Expedientes", roles: ["ADMIN", "OWNER"] },
   { href: "/invitaciones", label: "Enlaces compartidos", roles: ["ADMIN"] },
+  { href: "/usuarios", label: "Usuarios", roles: ["ADMIN"] },
 ];
 
 function isActive(href: string, pathname: string) {

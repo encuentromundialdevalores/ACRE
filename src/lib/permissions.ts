@@ -18,7 +18,9 @@ export type Action =
   | "document.delete"
   | "invitation.manage"
   | "invitation.list_all"
-  | "data.review";
+  | "data.review"
+  | "data.manual_entry"
+  | "user.manage";
 
 type Rule = { roles: Role[]; ownerScoped?: boolean };
 
@@ -37,6 +39,8 @@ export const PERMISSIONS: Record<Action, Rule> = {
   "invitation.manage":      { roles: ["ADMIN"] },
   "invitation.list_all":    { roles: ["ADMIN"] },
   "data.review":            { roles: ["ADMIN"] },
+  "data.manual_entry":      { roles: ["ADMIN"] },
+  "user.manage":            { roles: ["ADMIN"] },
 };
 
 export type Actor = { id: string; role: Role };

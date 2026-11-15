@@ -18,6 +18,8 @@ import { invitationState } from "@/lib/invitation-state";
 import { PolygonViewer } from "@/components/map";
 import { SourcesSection, toDataMap } from "@/components/expediente/sections";
 import { DocumentsManager, RunQueriesButton, SharePanel } from "@/components/expediente/actions";
+import { ManualEntryButton } from "@/components/expediente/manual-entry";
+import { MANUAL_FIELDS } from "@/lib/services/manual-data";
 
 export default async function PropertyPage({ params }: { params: { id: string } }) {
   const user = await requireUser();
@@ -39,6 +41,10 @@ export default async function PropertyPage({ params }: { params: { id: string } 
   const pct = Math.round((resolved / (status.required || 10)) * 100);
   const barTone = status.key === "completo" ? "bg-emerald-500" : status.key === "pendiente" ? "bg-amber-500" : status.key === "demo" ? "bg-violet-500" : "bg-brand-500";
   const canShare = can(user, "invitation.manage");
+  const ranOnce = prop.data.some((d) => d.fieldKey !== "superficie_m2");
+  const manualTargets = can(user, "data.manual_entry", prop) && ranOnce
+    ? MANUAL_FIELDS.map((k) => ({ fieldKey: k, status: data[k]?.verificationStatus ?? "SIN_CONSULTAR" })).filter((t) => t.status !== "CONFIRMADO")
+    : [];
   const activeInvs = invs.filter((i) => invitationState(i) === "activa").length;
 
   const tabs: TabItem[] = [
@@ -75,7 +81,7 @@ export default async function PropertyPage({ params }: { params: { id: string } 
       </PageHero>
 
       <div className="space-y-8">
-        {status.key === "pendiente" && <Alert tone="warn">Hay datos pendientes. Vuelve a ejecutar las consultas antes de presentar este expediente como verificado.</Alert>}
+        {manualTargets.length > 0 ? <ManualEntryButton propertyId={prop.id} targets={manualTargets} /> : status.key === "pendiente" && <Alert tone="warn">Hay datos pendientes. Vuelve a ejecutar las consultas antes de presentar este expediente como verificado.</Alert>}
         {demoMode && counts.demo > 0 && <Alert tone="info">Modo demostración: los datos marcados como <strong>Demostrativo</strong> son sintéticos.</Alert>}
         {!polygon && <Alert tone="warn">El terreno no tiene polígono. <Link className="underline" href={`/terrenos/${prop.id}/editar`}>Dibújalo</Link> para calcular la superficie y ejecutar las consultas.</Alert>}
 

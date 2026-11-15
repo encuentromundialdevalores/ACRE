@@ -118,5 +118,5 @@ export function expedienteStatus(c: { confirmed: number; pending: number; unavai
 }
 
 export async function listOwners() {
-  return db.select({ id: users.id, name: users.name, email: users.email }).from(users).where(eq(users.role, "OWNER")).orderBy(users.name);
+  return db.select({ id: users.id, name: users.name, email: users.email }).from(users).where(and(eq(users.role, "OWNER"), eq(users.active, true))).orderBy(users.name);
 }

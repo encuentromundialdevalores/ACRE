@@ -77,10 +77,16 @@ export async function executeConnector(connector: Connector, base: Omit<Connecto
 }
 
 async function upsertField(propertyId: string, f: FieldResult) {
+  // Un dato capturado a mano solo se reemplaza si la fuente ahora sí lo confirma.
+  if (f.status !== "CONFIRMADO") {
+    const [prev] = await db.select({ isManual: propertyData.isManual }).from(propertyData)
+      .where(and(eq(propertyData.propertyId, propertyId), eq(propertyData.fieldKey, f.fieldKey))).limit(1);
+    if (prev?.isManual) return;
+  }
   const row = {
     propertyId, fieldKey: f.fieldKey, value: f.value, valueJson: f.valueJson ?? null, unit: f.unit ?? null,
     source: f.source, sourceUrl: f.sourceUrl ?? null, method: f.method ?? null, consultedAt: new Date(),
-    verificationStatus: f.status, isDemo: !!f.isDemo, notes: f.notes ?? null,
+    verificationStatus: f.status, isDemo: !!f.isDemo, isManual: false, enteredBy: null, notes: f.notes ?? null,
   };
   await db.insert(propertyData).values(row).onConflictDoUpdate({ target: [propertyData.propertyId, propertyData.fieldKey], set: row });
 }

@@ -129,7 +129,7 @@ export function SourcesSection({ rows }: { rows: PropertyDatum[] }) {
                 <td className="max-w-xs py-2 pr-3"><span className="line-clamp-2">{r.value ?? "—"}</span>{r.notes && <span className="block text-xs text-amber-800">{r.notes}</span>}</td>
                 <td className="py-2 pr-3">{r.sourceUrl ? <a className="text-brand-700 underline-offset-2 hover:underline" href={r.sourceUrl} target="_blank" rel="noreferrer">{r.source}</a> : r.source}{r.method && <span className="block text-[11px] text-ink-subtle">{r.method}</span>}</td>
                 <td className="whitespace-nowrap py-2 pr-3">{formatDate(r.consultedAt, true)}</td>
-                <td className="py-2 pr-3"><StatusBadge status={r.verificationStatus} isDemo={r.isDemo} /></td>
+                <td className="py-2 pr-3"><StatusBadge status={r.verificationStatus} isDemo={r.isDemo} />{r.isManual && <span className="mt-1 block w-fit rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-semibold text-amber-900">Captura manual</span>}</td>
               </tr>
             ); })}
             {missing.map((k) => <tr key={k} className="border-b border-line/70 last:border-0"><td className="py-2 pr-3 text-ink-subtle">{FIELD_DEFS[k].order}</td><td className="py-2 pr-3 font-medium text-ink-muted">{FIELD_DEFS[k].label}</td><td className="py-2 pr-3 text-ink-subtle">Sin consultar</td><td className="py-2 pr-3 text-ink-subtle">{FIELD_DEFS[k].expectedSource}</td><td className="py-2 pr-3 text-ink-subtle">—</td><td className="py-2 pr-3 text-ink-subtle">—</td></tr>)}

@@ -14,6 +14,7 @@ export const users = pgTable("users", {
   email: text("email").notNull().unique(),
   passwordHash: text("password_hash").notNull(),
   role: roleEnum("role").notNull().default("OWNER"),
+  active: boolean("active").notNull().default(true),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
@@ -48,6 +49,9 @@ export const propertyData = pgTable("property_data", {
   consultedAt: timestamp("consulted_at", { withTimezone: true }).notNull().defaultNow(),
   verificationStatus: verificationEnum("verification_status").notNull().default("PENDIENTE"),
   isDemo: boolean("is_demo").notNull().default(false),
+  /** Capturado a mano por un socio cuando la fuente no respondió. */
+  isManual: boolean("is_manual").notNull().default(false),
+  enteredBy: uuid("entered_by").references(() => users.id, { onDelete: "set null" }),
   notes: text("notes"),
 }, (t) => [uniqueIndex("property_data_field_uq").on(t.propertyId, t.fieldKey)]);
 

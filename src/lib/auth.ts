@@ -20,7 +20,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (!parsed.success) return null;
         const email = parsed.data.email.toLowerCase().trim();
         const [user] = await db.select().from(users).where(eq(users.email, email)).limit(1);
-        if (!user) return null;
+        if (!user || !user.active) return null;
         const ok = await bcrypt.compare(parsed.data.password, user.passwordHash);
         if (!ok) return null;
         return { id: user.id, name: user.name, email: user.email, role: user.role };

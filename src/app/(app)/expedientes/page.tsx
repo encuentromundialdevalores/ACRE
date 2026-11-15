@@ -19,6 +19,10 @@ export default async function ExpedientesPage() {
       <PageHero
         title="Expedientes."
         lead="Cada terreno tiene un expediente con 10 datos. Aquí ves cuáles están completos y cuáles necesitan atención."
+        actions={user.role === "ADMIN" ? <>
+          <a href="/api/exportar?tipo=resumen" className="btn-primary" download>Descargar resumen <span className="font-normal opacity-70">CSV</span></a>
+          <a href="/api/exportar?tipo=datos" className="btn-secondary" download>Descargar datos por campo <span className="font-normal opacity-60">CSV</span></a>
+        </> : undefined}
         stats={[
           { label: "Listos para compartir", value: groups.completo.length, dot: "bg-emerald-500" },
           { label: "Con pendientes", value: groups.pendiente.length, dot: "bg-amber-500" },
