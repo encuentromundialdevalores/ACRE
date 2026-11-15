@@ -3,7 +3,8 @@
 // Solo se cargan recursos propios y los mosaicos de OpenStreetMap; las APIs externas se consultan desde el servidor.
 const csp = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline'",
+  // Next.js en desarrollo usa eval (recarga en caliente); en producción no se permite.
+  `script-src 'self' 'unsafe-inline'${process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https://*.tile.openstreetmap.org",
   "font-src 'self'",

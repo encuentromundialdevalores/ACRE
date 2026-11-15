@@ -14,7 +14,7 @@ export default async function EditPropertyPage({ params }: { params: { id: strin
   const owners = user.role === "ADMIN" ? await listOwners() : [];
   return (
     <div className="mx-auto max-w-6xl space-y-4">
-      <div><h2 className="text-xl font-semibold">Editar {prop.code} · {prop.name}</h2><p className="text-sm text-ink-muted">Si modificas el polígono, vuelve a ejecutar las consultas para actualizar el expediente.</p></div>
+      <div><h2 className="page-title">Editar {prop.code} · {prop.name}</h2><p className="page-lead">Si modificas el polígono, vuelve a ejecutar las consultas para actualizar el expediente.</p></div>
       <PropertyForm owners={owners} canAssignOwner={user.role === "ADMIN"}
         initial={{ id: prop.id, name: prop.name, description: prop.description, ownerId: prop.ownerId, address: prop.address, neighborhood: prop.neighborhood, municipality: prop.municipality, polygon: normalizePolygon(prop.polygonGeojson) as Feature<Polygon> | null }} />
     </div>

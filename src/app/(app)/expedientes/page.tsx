@@ -11,7 +11,7 @@ export default async function ExpedientesPage() {
   const groups = { completo: items.filter((i) => ["completo", "demo"].includes(expedienteStatus(i).key)), pendiente: items.filter((i) => expedienteStatus(i).key === "pendiente"), sin: items.filter((i) => expedienteStatus(i).key === "sin_consultar") };
   return (
     <div className="space-y-6">
-      <div><h2 className="text-xl font-semibold">Expedientes técnicos</h2><p className="text-sm text-ink-muted">Estado de integración de los 10 campos consultables de cada terreno. Fuente y fecha acompañan a cada dato dentro del expediente.</p></div>
+      <div><h2 className="page-title">Expedientes técnicos</h2><p className="page-lead">Estado de integración de los 10 campos consultables de cada terreno. Fuente y fecha acompañan a cada dato dentro del expediente.</p></div>
       <div className="grid gap-4 sm:grid-cols-3">
         <StatCard label="Completos" value={groups.completo.length} tone="accent" /><StatCard label="Con pendientes" value={groups.pendiente.length} tone="amber" /><StatCard label="Sin consultar" value={groups.sin.length} tone="slate" />
       </div>

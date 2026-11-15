@@ -4,6 +4,7 @@ import { getProperty, expedienteStatus } from "@/lib/services/properties";
 import { normalizePolygon, formatArea } from "@/lib/geo";
 import { PROXIMITY_RADIUS_M } from "@/lib/connectors/fields";
 import { Card, Badge, Alert, formatDate } from "@/components/ui";
+import { Logo } from "@/components/brand";
 import { PolygonViewer } from "@/components/map";
 import { CommercialSection, DatumRow, RisksSection, ServicesSection, SourcesSection, toDataMap } from "@/components/expediente/sections";
 
@@ -15,7 +16,7 @@ export default async function SharedPage({ params }: { params: { token: string }
   if (!inv || !prop) {
     return (
       <main className="flex min-h-screen items-center justify-center p-6">
-        <div className="card max-w-md p-8 text-center"><h1 className="text-lg font-semibold">Enlace no válido</h1><p className="mt-2 text-sm text-ink-muted">Esta invitación no existe, expiró o fue revocada por ACRE Consulting. Solicita un nuevo enlace al socio que te lo compartió.</p></div>
+        <div className="card max-w-md p-8 text-center"><h1 className="font-display text-2xl font-extrabold tracking-[-0.03em]">Enlace no válido</h1><p className="mt-2 text-sm text-ink-muted">Esta invitación no existe, expiró o fue revocada por ACRE Consulting. Solicita un nuevo enlace al socio que te lo compartió.</p></div>
       </main>
     );
   }
@@ -27,19 +28,19 @@ export default async function SharedPage({ params }: { params: { token: string }
   const photos = prop.documents.filter((d) => d.kind === "FOTO"), docs = prop.documents.filter((d) => d.kind === "DOCUMENTO");
   return (
     <div className="min-h-screen">
-      <header className="border-b border-line bg-surface"><div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-4 sm:px-6">
-        <div className="flex items-center gap-3"><span className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-600 font-bold text-white">A</span><div><p className="text-sm font-semibold">ACRE Consulting</p><p className="text-xs text-ink-subtle">Expediente compartido · solo lectura</p></div></div>
+      <header className="sky border-b border-line"><div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-5 sm:px-6">
+        <Logo subtitle="Expediente compartido · solo lectura" />
         <p className="text-xs text-ink-muted">Acceso válido hasta {formatDate(inv.expiresAt, true)}</p>
       </div></header>
       <main className="mx-auto max-w-6xl space-y-6 px-4 py-6 sm:px-6">
-        <div><div className="flex flex-wrap items-center gap-2"><h1 className="text-xl font-semibold">{prop.name}</h1><Badge tone="brand">{prop.code}</Badge><Badge tone={status.key === "completo" ? "green" : status.key === "pendiente" ? "amber" : status.key === "demo" ? "violet" : "slate"}>{status.label}</Badge></div><p className="mt-1 text-sm text-ink-muted">{prop.municipality ?? ""}</p></div>
+        <div><div className="flex flex-wrap items-center gap-2"><h1 className="page-title">{prop.name}</h1><Badge tone="brand">{prop.code}</Badge><Badge tone={status.key === "completo" ? "green" : status.key === "pendiente" ? "amber" : status.key === "demo" ? "violet" : "slate"}>{status.label}</Badge></div><p className="mt-1 text-sm text-ink-muted">{prop.municipality ?? ""}</p></div>
         {status.key === "pendiente" && <Alert tone="warn">Este expediente contiene datos pendientes de verificación.</Alert>}
         {counts.demo > 0 && <Alert tone="info">Los datos marcados como <strong>Demostrativo</strong> son sintéticos y no provienen de fuentes oficiales.</Alert>}
         <Alert tone="info">Esta plataforma centraliza información territorial verificable para análisis preliminares. No constituye un avalúo ni un dictamen oficial de viabilidad.</Alert>
         <div className="grid gap-6 xl:grid-cols-[1fr_1.1fr]">
           <Card title="A. Información general">
             <DatumRow label="Dirección oficial" datum={data.direccion} />
-            <DatumRow label="Superficie del polígono" datum={data.superficie_m2}><span className="text-lg font-semibold">{formatArea(prop.areaM2)}</span></DatumRow>
+            <DatumRow label="Superficie del polígono" datum={data.superficie_m2}><span className="font-display text-2xl font-extrabold tracking-[-0.03em]">{formatArea(prop.areaM2)}</span></DatumRow>
             <div className="py-3"><p className="text-xs font-medium uppercase tracking-wide text-ink-subtle">Registro</p><p className="mt-0.5 text-sm">{formatDate(prop.createdAt)}</p></div>
           </Card>
           <Card title="B. Ubicación geográfica"><PolygonViewer feature={polygon} point={point} radiusM={PROXIMITY_RADIUS_M} height={360} /></Card>

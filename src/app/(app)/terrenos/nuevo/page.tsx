@@ -10,7 +10,7 @@ export default async function NewPropertyPage() {
   const owners = user.role === "ADMIN" ? await listOwners() : [];
   return (
     <div className="mx-auto max-w-6xl space-y-4">
-      <div><h2 className="text-xl font-semibold">Registrar terreno</h2><p className="text-sm text-ink-muted">Tres pasos: dibuja el polígono, captura la información general y ejecuta las consultas desde el expediente.</p></div>
+      <div><h2 className="page-title">Registrar terreno</h2><p className="page-lead">Tres pasos: dibuja el polígono, captura la información general y ejecuta las consultas desde el expediente.</p></div>
       <PropertyForm owners={owners} canAssignOwner={user.role === "ADMIN"} />
     </div>
   );

@@ -11,7 +11,7 @@ export default async function DashboardPage() {
     const shared = await listInvitationsForEmail(user.email);
     return (
       <div className="space-y-4">
-        <div><h2 className="text-xl font-semibold">Expedientes compartidos contigo</h2><p className="text-sm text-ink-muted">Acceso de solo lectura mientras la invitación esté vigente. Los enlaces privados que recibas por otros medios funcionan sin iniciar sesión.</p></div>
+        <div><h2 className="page-title">Expedientes compartidos contigo</h2><p className="page-lead">Acceso de solo lectura mientras la invitación esté vigente. Los enlaces privados que recibas por otros medios funcionan sin iniciar sesión.</p></div>
         <Card>
           {shared.length === 0 ? <EmptyState title="Sin expedientes compartidos" description="Cuando un socio de ACRE comparta un expediente con tu correo aparecerá aquí." /> : (
             <ul className="divide-y divide-line">
@@ -31,10 +31,10 @@ export default async function DashboardPage() {
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
-        <div><h2 className="text-xl font-semibold">Hola, {user.name.split(" ")[0]}</h2><p className="text-sm text-ink-muted">Resumen de {user.role === "ADMIN" ? "la organización" : "tus terrenos"}. Los indicadores se calculan a partir de los datos almacenados.</p></div>
-        <Link href="/terrenos/nuevo" className="btn-primary">+ Registrar terreno</Link>
+        <div><p className="text-sm font-medium text-brand-500">Hola, {user.name.split(" ")[0]}</p><h2 className="page-title mt-1">{user.role === "ADMIN" ? "Así van los terrenos de ACRE" : "Así van tus terrenos"}</h2><p className="page-lead">Revisa qué expedientes están listos para compartir y cuáles tienen datos pendientes.</p></div>
+        <Link href="/terrenos/nuevo" className="btn-primary sm:hidden">Registrar terreno <span aria-hidden>→</span></Link>
       </div>
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
         <StatCard label="Terrenos registrados" value={s.total} tone="brand" />
         <StatCard label="Expedientes completos" value={s.complete} hint="10/10 campos resueltos" tone="accent" />
         <StatCard label="Con información pendiente" value={s.pending} hint={`${s.notQueried} sin consultar`} tone="amber" />

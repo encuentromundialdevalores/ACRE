@@ -30,7 +30,7 @@ export function LoginForm({ callbackUrl, initialError }: { callbackUrl?: string;
       <Field label="Contraseña" required>
         <input className="input" type="password" autoComplete="current-password" required value={password} onChange={(e) => setPassword(e.target.value)} />
       </Field>
-      <button className="btn-primary w-full" disabled={loading}>{loading && <Spinner />}Entrar</button>
+      <button className="btn-primary w-full py-3" disabled={loading}>{loading && <Spinner />}Entrar</button>
     </form>
   );
 }

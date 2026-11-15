@@ -35,7 +35,7 @@ export default async function PropertyPage({ params }: { params: { id: string } 
     <div className="space-y-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <div className="flex flex-wrap items-center gap-2"><h2 className="text-xl font-semibold">{prop.name}</h2><Badge tone="brand">{prop.code}</Badge><Badge tone={status.key === "completo" ? "green" : status.key === "pendiente" ? "amber" : status.key === "demo" ? "violet" : "slate"}>{status.label}{status.key !== "sin_consultar" ? ` · ${status.resolved}/${status.required}` : ""}</Badge></div>
+          <div className="flex flex-wrap items-center gap-2"><h2 className="page-title">{prop.name}</h2><Badge tone="brand">{prop.code}</Badge><Badge tone={status.key === "completo" ? "green" : status.key === "pendiente" ? "amber" : status.key === "demo" ? "violet" : "slate"}>{status.label}{status.key !== "sin_consultar" ? ` · ${status.resolved}/${status.required}` : ""}</Badge></div>
           <p className="mt-1 text-sm text-ink-muted">{prop.municipality ?? "Municipio sin capturar"} · registrado {formatDate(prop.createdAt, true)}{timeline.integrationMinutes != null && ` · tiempo de integración ${timeline.integrationMinutes < 60 ? `${timeline.integrationMinutes.toFixed(1)} min` : `${(timeline.integrationMinutes / 60).toFixed(1)} h`}`}</p>
         </div>
         <div className="flex flex-wrap items-start gap-2">
@@ -58,7 +58,7 @@ export default async function PropertyPage({ params }: { params: { id: string } 
             <div className="py-3"><p className="text-xs font-medium uppercase tracking-wide text-ink-subtle">Dirección capturada</p><p className="mt-0.5 text-sm">{[prop.address, prop.neighborhood, prop.municipality].filter(Boolean).join(", ") || <span className="text-ink-subtle">—</span>}</p></div>
             <div className="py-3"><p className="text-xs font-medium uppercase tracking-wide text-ink-subtle">Propietario</p><p className="mt-0.5 text-sm">{prop.owner?.name ?? <span className="text-ink-subtle">Sin asignar</span>}</p></div>
           </div>
-          <DatumRow label="Superficie del polígono" datum={data.superficie_m2}><span className="text-lg font-semibold">{formatArea(prop.areaM2)}</span></DatumRow>
+          <DatumRow label="Superficie del polígono" datum={data.superficie_m2}><span className="font-display text-2xl font-extrabold tracking-[-0.03em]">{formatArea(prop.areaM2)}</span></DatumRow>
           {prop.description && <div className="py-3"><p className="text-xs font-medium uppercase tracking-wide text-ink-subtle">Descripción</p><p className="mt-0.5 text-sm text-ink-muted">{prop.description}</p></div>}
         </Card>
         <Card title="B. Ubicación geográfica" description={`Polígono del terreno, punto representativo y radio de ${PROXIMITY_RADIUS_M} m usado en las consultas de proximidad.`}>

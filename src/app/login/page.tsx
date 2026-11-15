@@ -1,46 +1,46 @@
 import { redirect } from "next/navigation";
 import { getSessionUser } from "@/lib/session";
 import { LoginForm } from "./login-form";
+import { Cerro, Logo } from "@/components/brand";
 
 export default async function LoginPage({ searchParams }: { searchParams: { callbackUrl?: string; error?: string } }) {
   const user = await getSessionUser();
   if (user) redirect("/dashboard");
   const demo = (process.env.DATA_MODE ?? "demo").toLowerCase() !== "real";
   return (
-    <main className="grid min-h-screen lg:grid-cols-[1.1fr_1fr]">
-      <section className="hidden bg-brand-900 p-12 text-white lg:flex lg:flex-col lg:justify-between">
-        <div className="flex items-center gap-3">
-          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent-500 font-bold">A</span>
-          <span className="text-sm font-semibold tracking-wide">ACRE Consulting</span>
-        </div>
+    <main className="sky relative flex min-h-screen flex-col overflow-hidden">
+      <header className="relative z-10 mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-5 sm:px-8">
+        <Logo subtitle="Gestión Territorial" />
+        <span className="text-sm text-ink-muted">Área Metropolitana de Monterrey</span>
+      </header>
+
+      <div className="relative z-10 mx-auto grid w-full max-w-7xl flex-1 items-center gap-10 px-4 pb-48 pt-6 sm:px-8 lg:grid-cols-[1.2fr_1fr] lg:pb-56">
         <div>
-          <h1 className="text-4xl font-semibold leading-tight">Plataforma de Gestión Territorial</h1>
-          <p className="mt-4 max-w-md text-brand-100/80">Registra terrenos, dibuja su polígono, consulta fuentes oficiales y comparte el expediente técnico con compradores en minutos, no en horas.</p>
-          <ul className="mt-8 grid gap-3 text-sm text-brand-100/90">
-            <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-accent-500" />INEGI · DENUE, Google Maps Platform y Atlas Nacional de Riesgos</li>
-            <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-accent-500" />Fuente, fecha y estado de verificación de cada dato</li>
-            <li className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-accent-500" />Enlaces privados y temporales para compartir</li>
-          </ul>
+          <h1 className="font-display text-[44px] font-black leading-[0.95] tracking-[-0.045em] text-ink sm:text-6xl lg:text-7xl">
+            Cada terreno,<br />con datos que<br />se pueden verificar.
+          </h1>
+          <p className="mt-6 max-w-lg text-lg text-ink-muted">
+            <span className="font-medium text-ink">Dibuja el polígono, consulta INEGI, Google y el Atlas de Riesgos.</span>{" "}
+            Comparte el expediente con un enlace privado.
+          </p>
         </div>
-        <p className="text-xs text-brand-100/60">Área Metropolitana de Monterrey, Nuevo León. Sin avalúos ni dictámenes oficiales.</p>
-      </section>
-      <section className="flex items-center justify-center p-6">
-        <div className="w-full max-w-sm">
-          <div className="mb-8 flex items-center gap-3 lg:hidden">
-            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-600 font-bold text-white">A</span>
-            <span className="font-semibold">ACRE Consulting</span>
-          </div>
-          <h2 className="text-2xl font-semibold">Iniciar sesión</h2>
-          <p className="mt-1 text-sm text-ink-muted">Accede con tu correo y contraseña.</p>
+
+        <div className="w-full max-w-md justify-self-center rounded-3xl border border-white/70 bg-white/90 p-7 shadow-[0_30px_60px_-30px_rgb(20_22_23/0.35)] backdrop-blur sm:p-8 lg:justify-self-end">
+          <h2 className="font-display text-2xl font-extrabold tracking-[-0.03em]">Iniciar sesión</h2>
+          <p className="mt-1 text-sm text-ink-muted">Entra con el correo que te dio ACRE.</p>
           <LoginForm callbackUrl={searchParams.callbackUrl} initialError={searchParams.error} />
           {demo && (
-            <div className="mt-8 rounded-md border border-violet-200 bg-violet-50 p-3 text-xs text-violet-800">
-              <p className="font-semibold">Modo demostración activo</p>
-              <p className="mt-1">Cuentas de prueba (ver <code>scripts/seed.ts</code>): admin@acre.local / Admin1234! · propietario@acre.local / Owner1234! · comprador@acre.local / Buyer1234!</p>
-            </div>
+            <p className="mt-6 rounded-xl bg-violet-50 p-3 text-xs text-violet-800">
+              <strong>Modo demostración.</strong> Cuentas de prueba: admin@acre.local / Admin1234! · propietario@acre.local / Owner1234! · comprador@acre.local / Buyer1234!
+            </p>
           )}
         </div>
-      </section>
+      </div>
+
+      <div className="pointer-events-none absolute inset-x-0 bottom-0">
+        <Cerro tone="sky" className="absolute bottom-10 h-40 w-full opacity-70 sm:h-52" />
+        <Cerro className="relative h-28 w-full sm:h-40" />
+      </div>
     </main>
   );
 }

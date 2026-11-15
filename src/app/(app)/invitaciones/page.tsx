@@ -13,7 +13,7 @@ export default async function InvitationsPage() {
   const active = rows.filter((r) => invitationState(r.inv) === "activa").length;
   return (
     <div className="space-y-4">
-      <div><h2 className="text-xl font-semibold">Invitaciones</h2><p className="text-sm text-ink-muted">{active} activa{active === 1 ? "" : "s"} de {rows.length}. Los enlaces se generan desde el expediente de cada terreno y sólo se muestran una vez.</p></div>
+      <div><h2 className="page-title">Invitaciones</h2><p className="page-lead">{active} activa{active === 1 ? "" : "s"} de {rows.length}. Los enlaces se generan desde el expediente de cada terreno y sólo se muestran una vez.</p></div>
       <Card>
         {rows.length === 0 ? <EmptyState title="Sin invitaciones" description="Comparte un expediente desde la sección «Compartir expediente» de un terreno." action={{ href: "/terrenos", label: "Ir a terrenos" }} /> : (
           <div className="overflow-x-auto"><table className="w-full text-sm">

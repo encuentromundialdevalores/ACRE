@@ -13,8 +13,8 @@ export default async function PropertiesPage({ searchParams }: { searchParams: {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-end justify-between gap-3">
-        <div><h2 className="text-xl font-semibold">Terrenos</h2><p className="text-sm text-ink-muted">{items.length} terreno{items.length === 1 ? "" : "s"} {user.role === "ADMIN" ? "en la organización" : "a tu nombre"}.</p></div>
-        <Link href="/terrenos/nuevo" className="btn-primary">+ Registrar terreno</Link>
+        <div><h2 className="page-title">Terrenos</h2><p className="page-lead">{items.length} terreno{items.length === 1 ? "" : "s"} {user.role === "ADMIN" ? "en la organización" : "a tu nombre"}.</p></div>
+        <Link href="/terrenos/nuevo" className="btn-primary">Registrar terreno <span aria-hidden>→</span></Link>
       </div>
       <Card>
         <form className="mb-4 grid gap-3 md:grid-cols-[1fr_200px_200px_auto]">

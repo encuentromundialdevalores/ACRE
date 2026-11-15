@@ -6,28 +6,25 @@ export function Card({ title, description, actions, children, className = "" }: 
   return (
     <section className={`card ${className}`}>
       {(title || actions) && (
-        <header className="flex flex-wrap items-start justify-between gap-3 border-b border-line px-5 py-4">
+        <header className="flex flex-wrap items-start justify-between gap-3 px-6 pb-2 pt-5">
           <div>
-            {title && <h2 className="text-base font-semibold text-ink">{title}</h2>}
+            {title && <h2 className="font-display text-lg font-bold tracking-[-0.02em] text-ink">{title}</h2>}
             {description && <p className="mt-0.5 text-sm text-ink-muted">{description}</p>}
           </div>
           {actions && <div className="flex items-center gap-2">{actions}</div>}
         </header>
       )}
-      <div className="px-5 py-4">{children}</div>
+      <div className="px-6 pb-6 pt-3">{children}</div>
     </section>
   );
 }
 
 export function StatCard({ label, value, hint, tone = "brand" }: { label: string; value: string | number; hint?: string; tone?: "brand" | "accent" | "amber" | "slate" }) {
-  const tones = { brand: "bg-brand-50 text-brand-700", accent: "bg-accent-100 text-accent-700", amber: "bg-amber-50 text-amber-700", slate: "bg-slate-100 text-slate-700" };
+  const dot = { brand: "bg-ink", accent: "bg-emerald-500", amber: "bg-amber-500", slate: "bg-brand-500" }[tone];
   return (
-    <div className="card p-5">
-      <div className="flex items-center justify-between">
-        <p className="text-sm font-medium text-ink-muted">{label}</p>
-        <span className={`h-2.5 w-2.5 rounded-full ${tones[tone].split(" ")[0].replace("50", "500").replace("100", "500")}`} />
-      </div>
-      <p className="mt-2 text-3xl font-semibold tracking-tight">{value}</p>
+    <div className="card p-4 sm:p-6">
+      <p className="flex items-center gap-2 text-[13px] text-ink-muted sm:text-sm"><span className={`h-2 w-2 rounded-full ${dot}`} />{label}</p>
+      <p className="mt-2 font-display text-4xl font-black sm:mt-3 sm:text-5xl tracking-[-0.05em] text-ink">{value}</p>
       {hint && <p className="mt-1 text-xs text-ink-subtle">{hint}</p>}
     </div>
   );
@@ -57,11 +54,11 @@ export function Badge({ children, tone = "slate" }: { children: ReactNode; tone?
 
 export function EmptyState({ title, description, action }: { title: string; description?: string; action?: { href: string; label: string } }) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-line px-6 py-12 text-center">
-      <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-brand-50 text-brand-600">
+    <div className="flex flex-col items-center justify-center rounded-2xl bg-canvas px-6 py-14 text-center">
+      <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-white text-ink shadow-card">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M4 7h16M4 12h16M4 17h10" /></svg>
       </div>
-      <p className="text-sm font-medium text-ink">{title}</p>
+      <p className="font-display text-lg font-bold tracking-[-0.02em] text-ink">{title}</p>
       {description && <p className="mt-1 max-w-sm text-sm text-ink-muted">{description}</p>}
       {action && <Link href={action.href} className="btn-primary mt-4">{action.label}</Link>}
     </div>
@@ -89,7 +86,7 @@ export function Alert({ tone = "info", children }: { tone?: "info" | "warn" | "e
     error: "border-red-200 bg-red-50 text-red-700",
     success: "border-emerald-200 bg-emerald-50 text-emerald-700",
   };
-  return <div className={`rounded-md border px-3.5 py-2.5 text-sm ${map[tone]}`}>{children}</div>;
+  return <div className={`rounded-xl border px-4 py-3 text-sm ${map[tone]}`}>{children}</div>;
 }
 
 export function formatDate(d: Date | string | null | undefined, withTime = false) {

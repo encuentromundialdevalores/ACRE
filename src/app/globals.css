@@ -2,40 +2,59 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Tokens provisionales (azul oscuro, blanco, gris, verde azulado). Sustituir con la identidad oficial de ACRE. */
+/*
+  Sistema visual ACRE · "Cielo de Monterrey"
+  Tinta casi negra sobre blanco, cielo azul pálido como atmósfera y la silueta
+  del Cerro de la Silla como único gesto gráfico. Botones en píldora negra.
+*/
 :root {
-  --brand-50: 239 244 250;
-  --brand-100: 219 229 243;
-  --brand-500: 37 72 128;
-  --brand-600: 29 58 105;
-  --brand-700: 22 45 82;
-  --brand-900: 12 25 48;
-  --accent-100: 209 240 236;
-  --accent-500: 20 150 140;
-  --accent-600: 15 125 117;
-  --accent-700: 11 99 93;
+  --brand-50: 240 245 250;   /* cielo muy claro */
+  --brand-100: 217 231 242;  /* cielo #D9E7F2 */
+  --brand-500: 47 102 144;   /* azul cielo #2F6690 */
+  --brand-600: 37 84 120;
+  --brand-700: 29 66 95;
+  --brand-900: 20 22 23;     /* tinta */
+  --accent-100: 217 231 242;
+  --accent-500: 47 102 144;
+  --accent-600: 37 84 120;
+  --accent-700: 29 66 95;
   --surface: 255 255 255;
-  --canvas: 246 248 251;
-  --ink: 17 24 39;
-  --ink-muted: 75 85 99;
-  --ink-subtle: 120 130 145;
-  --line: 226 232 240;
+  --canvas: 244 246 248;     /* niebla #F4F6F8 */
+  --ink: 20 22 23;           /* #141617 */
+  --ink-muted: 84 91 99;
+  --ink-subtle: 132 139 147;
+  --line: 229 232 235;       /* #E5E8EB */
 }
 
 html, body { height: 100%; }
-body { @apply bg-canvas text-ink antialiased; }
+body { @apply bg-canvas text-ink antialiased; font-feature-settings: "ss01", "cv11"; }
 
-.leaflet-container { font: inherit; }
+.leaflet-container { font: inherit; border-radius: 1rem; }
 .leaflet-draw-toolbar a { background-color: #fff; }
 
+/* Cielo: degradado suave que evoca la referencia sin imágenes */
+.sky {
+  background:
+    radial-gradient(120% 80% at 85% 110%, rgb(253 226 200 / 0.55), transparent 60%),
+    radial-gradient(90% 70% at 10% 0%, rgb(255 255 255 / 0.9), transparent 70%),
+    linear-gradient(180deg, #CFE2F1 0%, #E4EEF6 55%, #F4F6F8 100%);
+}
+
 @layer components {
-  .input { @apply w-full rounded-md border border-line bg-surface px-3 py-2 text-sm text-ink placeholder:text-ink-subtle focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 disabled:bg-canvas; }
-  .label { @apply mb-1 block text-xs font-medium uppercase tracking-wide text-ink-muted; }
-  .card { @apply rounded-xl border border-line bg-surface shadow-card; }
-  .btn { @apply inline-flex items-center justify-center gap-2 rounded-md px-3.5 py-2 text-sm font-medium transition disabled:cursor-not-allowed disabled:opacity-60; }
-  .btn-primary { @apply btn bg-brand-600 text-white hover:bg-brand-700; }
-  .btn-accent { @apply btn bg-accent-600 text-white hover:bg-accent-700; }
-  .btn-secondary { @apply btn border border-line bg-surface text-ink hover:bg-canvas; }
+  .page-title { @apply font-display text-3xl font-extrabold tracking-[-0.03em] text-ink sm:text-4xl; }
+  .page-lead { @apply mt-1.5 max-w-2xl text-[15px] text-ink-muted; }
+  .input { @apply w-full rounded-xl border border-line bg-surface px-3.5 py-2.5 text-sm text-ink placeholder:text-ink-subtle transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-brand-100 disabled:bg-canvas; }
+  .label { @apply mb-1.5 block text-[13px] font-medium text-ink-muted; }
+  .card { @apply rounded-2xl border border-line/80 bg-surface shadow-card; }
+  .btn { @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-100 disabled:cursor-not-allowed disabled:opacity-50; }
+  .btn-primary { @apply btn bg-ink text-white hover:bg-black; }
+  .btn-accent { @apply btn bg-brand-500 text-white hover:bg-brand-600; }
+  .btn-secondary { @apply btn border border-line bg-surface text-ink hover:border-ink/30; }
   .btn-danger { @apply btn border border-red-200 bg-white text-red-700 hover:bg-red-50; }
-  .btn-ghost { @apply btn text-ink-muted hover:bg-canvas hover:text-ink; }
+  .btn-ghost { @apply btn px-3 text-ink-muted hover:bg-ink/5 hover:text-ink; }
+  .mono { @apply font-mono text-[12px] tracking-tight; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
 }
