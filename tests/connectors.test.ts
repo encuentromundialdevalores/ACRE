@@ -94,3 +94,13 @@ describe("DENUE sin resultados", () => {
     expect(count?.value).toBe("0");
   });
 });
+
+describe("validación de contenido de archivos", () => {
+  it("rechaza HTML declarado como PNG y acepta firmas reales", async () => {
+    const { contentMatchesMime } = await import("@/lib/storage");
+    expect(contentMatchesMime(Buffer.from("<script>alert(1)</script>"), "image/png")).toBe(false);
+    expect(contentMatchesMime(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0]), "image/png")).toBe(true);
+    expect(contentMatchesMime(Buffer.from("%PDF-1.4\n"), "application/pdf")).toBe(true);
+    expect(contentMatchesMime(Buffer.from("no es json"), "application/json")).toBe(false);
+  });
+});

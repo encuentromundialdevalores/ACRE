@@ -66,6 +66,25 @@ export const ALLOWED_MIME: Record<string, "FOTO" | "DOCUMENTO"> = {
   "application/geo+json": "DOCUMENTO", "application/json": "DOCUMENTO",
 };
 
+/** Comprueba la firma real del archivo (magic bytes): el tipo declarado por el navegador no es confiable. */
+export function contentMatchesMime(buf: Buffer, mime: string): boolean {
+  const starts = (...b: number[]) => b.every((x, i) => buf[i] === x);
+  switch (mime) {
+    case "image/jpeg": return starts(0xff, 0xd8, 0xff);
+    case "image/png": return starts(0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a);
+    case "image/webp": return buf.subarray(0, 4).toString("latin1") === "RIFF" && buf.subarray(8, 12).toString("latin1") === "WEBP";
+    case "application/pdf": return buf.subarray(0, 5).toString("latin1") === "%PDF-";
+    case "application/msword": return starts(0xd0, 0xcf, 0x11, 0xe0, 0xa1, 0xb1, 0x1a, 0xe1);
+    case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+    case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": return starts(0x50, 0x4b, 0x03, 0x04);
+    case "application/geo+json":
+    case "application/json": {
+      try { JSON.parse(buf.toString("utf8")); return true; } catch { return false; }
+    }
+    default: return false;
+  }
+}
+
 export const maxUploadBytes = () => Number(process.env.MAX_UPLOAD_MB ?? 15) * 1024 * 1024;
 
 export function newStorageKey(propertyId: string, filename: string) {
