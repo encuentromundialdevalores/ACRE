@@ -15,7 +15,7 @@ export default function PolygonViewer({ feature, point, markers = [], radiusM, h
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: "&copy; OpenStreetMap" }).addTo(map);
     const layers: L.Layer[] = [];
     if (feature) {
-      const poly = L.geoJSON(feature, { style: { color: "#14968c", weight: 2, fillOpacity: 0.2 } }).addTo(map);
+      const poly = L.geoJSON(feature, { style: { color: "#2F6690", weight: 2, fillOpacity: 0.2 } }).addTo(map);
       layers.push(poly);
       map.fitBounds(poly.getBounds(), { padding: [30, 30] });
     } else if (point) {

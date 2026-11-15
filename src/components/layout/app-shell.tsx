@@ -26,7 +26,7 @@ export function AppShell({ user, demoMode, children }: { user: { name: string; e
   const canCreate = user.role !== "BUYER";
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen overflow-x-clip">
       <header className="sticky top-0 z-30 border-b border-line/70 bg-white/85 backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-7xl items-center gap-4 px-4 sm:px-6 lg:px-8">
           <Link href="/dashboard" aria-label="Inicio"><Logo subtitle="Gestión Territorial" /></Link>

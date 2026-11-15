@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Alert, Spinner, formatDate, Badge } from "@/components/ui";
 import { useToast } from "@/components/ui/toast";
+import { useConfirm } from "@/components/ui/confirm";
 import type { Document, Invitation } from "@/lib/db/schema";
 import type { RunSummary } from "@/lib/connectors/runner";
 import { INVITATION_DAYS, invitationState } from "@/lib/invitation-state";
@@ -41,7 +42,7 @@ export function RunQueriesButton({ propertyId, hasGeometry }: { propertyId: stri
 
 export function DocumentsManager({ propertyId, documents, canUpload, canDelete }: { propertyId: string; documents: Document[]; canUpload: boolean; canDelete: boolean }) {
   const router = useRouter();
-  const toast = useToast();
+  const toast = useToast(); const confirm = useConfirm();
   const [uploading, setUploading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   async function upload(files: FileList) {
@@ -56,7 +57,7 @@ export function DocumentsManager({ propertyId, documents, canUpload, canDelete }
     if (inputRef.current) inputRef.current.value = "";
   }
   async function remove(doc: Document) {
-    if (!confirm(`¿Eliminar "${doc.filename}"? Esta acción no se puede deshacer.`)) return;
+    if (!(await confirm({ title: "¿Eliminar este archivo?", message: `"${doc.filename}" se borrará del expediente. Esta acción no se puede deshacer.`, confirmLabel: "Eliminar archivo", tone: "danger" }))) return;
     const res = await fetch(`/api/documentos/${doc.id}`, { method: "DELETE" });
     if (res.ok) { toast.push("Archivo eliminado", "success"); router.refresh(); } else toast.push("No se pudo eliminar", "error");
   }
@@ -102,7 +103,7 @@ export function DocumentsManager({ propertyId, documents, canUpload, canDelete }
 
 export function SharePanel({ propertyId, invitations }: { propertyId: string; invitations: Invitation[] }) {
   const router = useRouter();
-  const toast = useToast();
+  const toast = useToast(); const confirm = useConfirm();
   const [days, setDays] = useState<number>(7);
   const [label, setLabel] = useState("");
   const [email, setEmail] = useState("");
@@ -116,9 +117,9 @@ export function SharePanel({ propertyId, invitations }: { propertyId: string; in
     setUrl(data.url); setLabel(""); setEmail(""); router.refresh();
   }
   async function revoke(id: string) {
-    if (!confirm("¿Revocar esta invitación? El enlace dejará de funcionar de inmediato.")) return;
+    if (!(await confirm({ title: "¿Revocar este enlace?", message: "Quien lo tenga dejará de ver el expediente de inmediato. Esta acción no se puede deshacer.", confirmLabel: "Revocar enlace", tone: "danger" }))) return;
     const res = await fetch(`/api/invitaciones/${id}`, { method: "DELETE" });
-    if (res.ok) { toast.push("Invitación revocada", "success"); router.refresh(); }
+    if (res.ok) { toast.push("Enlace revocado", "success"); router.refresh(); }
   }
   return (
     <div className="space-y-5">

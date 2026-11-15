@@ -42,7 +42,7 @@ export default function PolygonEditor({ initial, onChange, height = 480, readOnl
     group.addTo(map);
 
     if (initial) {
-      const layer = L.geoJSON(initial, { style: { color: "#14968c", weight: 2, fillOpacity: 0.18 } });
+      const layer = L.geoJSON(initial, { style: { color: "#2F6690", weight: 2, fillOpacity: 0.18 } });
       layer.eachLayer((l) => group.addLayer(l));
       map.fitBounds(group.getBounds(), { padding: [24, 24] });
     }
@@ -50,7 +50,7 @@ export default function PolygonEditor({ initial, onChange, height = 480, readOnl
     if (!readOnly) {
       const drawControl = new L.Control.Draw({
         position: "topright",
-        draw: { polygon: { allowIntersection: false, showArea: false, shapeOptions: { color: "#14968c", weight: 2, fillOpacity: 0.18 } }, polyline: false, rectangle: false, circle: false, marker: false, circlemarker: false },
+        draw: { polygon: { allowIntersection: false, showArea: false, shapeOptions: { color: "#2F6690", weight: 2, fillOpacity: 0.18 } }, polyline: false, rectangle: false, circle: false, marker: false, circlemarker: false },
         edit: { featureGroup: group, remove: true },
       });
       map.addControl(drawControl);
@@ -78,7 +78,7 @@ export default function PolygonEditor({ initial, onChange, height = 480, readOnl
     if (currentJson === nextJson) return;
     groupRef.current.clearLayers();
     if (initial) {
-      L.geoJSON(initial, { style: { color: "#14968c", weight: 2, fillOpacity: 0.18 } }).eachLayer((l) => groupRef.current.addLayer(l));
+      L.geoJSON(initial, { style: { color: "#2F6690", weight: 2, fillOpacity: 0.18 } }).eachLayer((l) => groupRef.current.addLayer(l));
       map.fitBounds(groupRef.current.getBounds(), { padding: [24, 24] });
     }
     emit();
@@ -87,17 +87,14 @@ export default function PolygonEditor({ initial, onChange, height = 480, readOnl
 
   return (
     <div className="grid gap-4 lg:grid-cols-[1fr_280px]">
-      <div ref={containerRef} style={{ height }} className="z-0 w-full overflow-hidden rounded-lg border border-line" />
-      <aside className="card p-4 text-sm">
-        <h3 className="font-semibold">Geometría</h3>
-        {!readOnly && <p className="mt-1 text-xs text-ink-muted">Usa el icono de polígono (arriba a la derecha del mapa) para dibujar. Edita o elimina vértices con el icono de edición.</p>}
-        <dl className="mt-4 space-y-3">
-          <div><dt className="label">Superficie</dt><dd className="text-lg font-semibold">{state.areaM2 != null ? formatArea(state.areaM2) : "—"}</dd></div>
-          <div><dt className="label">Vértices</dt><dd>{state.feature ? state.feature.geometry.coordinates[0].length - 1 : "—"}</dd></div>
-          <div><dt className="label">Punto representativo</dt><dd className="font-mono text-xs">{state.point ? `${state.point.lat.toFixed(6)}, ${state.point.lng.toFixed(6)}` : "—"}</dd></div>
-          <div><dt className="label">Validez</dt><dd>{state.error ? <span className="text-red-700">{state.error}</span> : state.feature ? <span className="text-emerald-700">Polígono válido, sin autointersecciones</span> : <span className="text-ink-subtle">Sin polígono</span>}</dd></div>
-        </dl>
-        <p className="mt-4 text-[11px] text-ink-subtle">Área geodésica calculada con Turf.js; coordenadas guardadas como GeoJSON (WGS84, [lng, lat]).</p>
+      <div ref={containerRef} style={{ height }} className="z-0 w-full overflow-hidden rounded-2xl border border-line" />
+      <aside className="rounded-2xl bg-canvas p-5 text-sm">
+        <p className="text-xs text-ink-muted">Superficie</p>
+        <p className="mt-1 font-display text-3xl font-black tracking-[-0.04em]">{state.areaM2 != null ? formatArea(state.areaM2) : "—"}</p>
+        <p className="mt-4 text-xs text-ink-muted">Estado</p>
+        <p className="mt-1">{state.error ? <span className="font-medium text-red-700">{state.error}</span> : state.feature ? <span className="font-medium text-emerald-700">Polígono listo</span> : <span className="text-ink-subtle">Aún no hay polígono</span>}</p>
+        {state.feature && <p className="mt-4 text-xs text-ink-subtle">{state.feature.geometry.coordinates[0].length - 1} esquinas · centro <span className="mono">{state.point ? `${state.point.lat.toFixed(5)}, ${state.point.lng.toFixed(5)}` : ""}</span></p>}
+        {!readOnly && <p className="mt-5 border-t border-line pt-4 text-xs text-ink-muted">¿Te equivocaste? Usa el icono de lápiz para mover esquinas o el de bote para borrar y volver a dibujar.</p>}
       </aside>
     </div>
   );

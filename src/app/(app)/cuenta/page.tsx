@@ -1,22 +1,21 @@
 import { requireUser } from "@/lib/session";
-import { ROLE_LABELS, PERMISSIONS } from "@/lib/permissions";
-import { Card, Badge } from "@/components/ui";
+import { ROLE_LABELS } from "@/lib/permissions";
+import { Card, Badge, PageHero } from "@/components/ui";
 import { currentDataMode, REAL_CONNECTORS } from "@/lib/connectors";
 
 export default async function AccountPage() {
   const user = await requireUser();
   const mode = currentDataMode();
-  const actions = Object.entries(PERMISSIONS).filter(([, r]) => r.roles.includes(user.role));
   return (
+    <div>
+    <PageHero title="Mi cuenta." lead="Tus datos de acceso a la plataforma." />
     <div className="grid gap-6 lg:grid-cols-2">
-      <Card title="Mi cuenta">
+      <Card title="Perfil">
         <dl className="space-y-3 text-sm">
           <div><dt className="label">Nombre</dt><dd className="font-medium">{user.name}</dd></div>
           <div><dt className="label">Correo</dt><dd>{user.email}</dd></div>
           <div><dt className="label">Rol</dt><dd><Badge tone="brand">{ROLE_LABELS[user.role]}</Badge></dd></div>
         </dl>
-        <h3 className="mt-6 text-sm font-semibold">Permisos de tu rol</h3>
-        <ul className="mt-2 flex flex-wrap gap-1.5">{actions.map(([a, r]) => <li key={a}><Badge tone="slate">{a}{r.ownerScoped && user.role === "OWNER" ? " (propios)" : ""}</Badge></li>)}</ul>
       </Card>
       {user.role === "ADMIN" && (
         <Card title="Estado de la plataforma" description="Configuración detectada en el servidor. Las credenciales nunca se muestran ni se envían al navegador.">
@@ -28,6 +27,7 @@ export default async function AccountPage() {
           </dl>
         </Card>
       )}
+    </div>
     </div>
   );
 }

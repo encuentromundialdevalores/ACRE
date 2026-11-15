@@ -94,3 +94,35 @@ export function formatDate(d: Date | string | null | undefined, withTime = false
   const date = typeof d === "string" ? new Date(d) : d;
   return date.toLocaleString("es-MX", { dateStyle: "medium", ...(withTime ? { timeStyle: "short" } : {}) });
 }
+
+/** Encabezado de página con el cielo del login: titular grande, texto breve y cifras opcionales. */
+export function PageHero({ eyebrow, title, lead, actions, stats, children }: {
+  eyebrow?: string; title: ReactNode; lead?: ReactNode; actions?: ReactNode;
+  stats?: { label: string; value: string | number; dot?: string }[]; children?: ReactNode;
+}) {
+  return (
+    <section className="sky -mt-8 mb-8 ml-[calc(50%-50vw)] w-screen rounded-b-[2.5rem] pb-10 pt-10 lg:-mt-10 lg:pb-12 lg:pt-14">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-wrap items-end justify-between gap-6">
+          <div className="max-w-3xl">
+            {eyebrow && <p className="text-sm font-medium text-brand-700">{eyebrow}</p>}
+            <h1 className="mt-1 font-display text-4xl font-black leading-[0.95] tracking-[-0.045em] sm:text-6xl">{title}</h1>
+            {lead && <p className="mt-4 max-w-xl text-lg text-ink-muted">{lead}</p>}
+          </div>
+          {actions && <div className="flex flex-wrap gap-2">{actions}</div>}
+        </div>
+        {stats && stats.length > 0 && (
+          <dl className="mt-10 grid grid-cols-2 gap-x-8 gap-y-6 sm:flex sm:flex-wrap sm:gap-x-14">
+            {stats.map((s) => (
+              <div key={s.label}>
+                <dt className="flex items-center gap-2 text-sm text-ink-muted">{s.dot && <span className={`h-2 w-2 rounded-full ${s.dot}`} />}{s.label}</dt>
+                <dd className="mt-1 font-display text-5xl font-black tracking-[-0.05em]">{s.value}</dd>
+              </div>
+            ))}
+          </dl>
+        )}
+        {children}
+      </div>
+    </section>
+  );
+}

@@ -3,20 +3,26 @@ import { resolveInvitationToken } from "@/lib/services/invitations";
 import { getProperty, expedienteStatus } from "@/lib/services/properties";
 import { normalizePolygon, formatArea } from "@/lib/geo";
 import { PROXIMITY_RADIUS_M } from "@/lib/connectors/fields";
-import { Card, Badge, Alert, formatDate } from "@/components/ui";
-import { Logo } from "@/components/brand";
+import { Card, formatDate } from "@/components/ui";
 import { PolygonViewer } from "@/components/map";
-import { CommercialSection, DatumRow, RisksSection, ServicesSection, SourcesSection, toDataMap } from "@/components/expediente/sections";
+import { Cerro, Logo } from "@/components/brand";
+import { CommercialSection, RisksSection, ServicesSection, toDataMap } from "@/components/expediente/sections";
 
 export const dynamic = "force-dynamic";
 
+/** Vista del comprador: solo lectura, sin fuentes, metodología ni datos internos de ACRE. */
 export default async function SharedPage({ params }: { params: { token: string } }) {
   const inv = await resolveInvitationToken(params.token);
   const prop = inv ? await getProperty(inv.propertyId) : null;
   if (!inv || !prop) {
     return (
-      <main className="flex min-h-screen items-center justify-center p-6">
-        <div className="card max-w-md p-8 text-center"><h1 className="font-display text-2xl font-extrabold tracking-[-0.03em]">Enlace no válido</h1><p className="mt-2 text-sm text-ink-muted">Esta invitación no existe, expiró o fue revocada por ACRE Consulting. Solicita un nuevo enlace al socio que te lo compartió.</p></div>
+      <main className="sky relative flex min-h-screen flex-col items-center justify-center overflow-hidden p-6">
+        <div className="relative z-10 max-w-md rounded-3xl bg-white/90 p-8 text-center shadow-card backdrop-blur">
+          <Logo />
+          <h1 className="mt-6 font-display text-3xl font-extrabold tracking-[-0.03em]">Este enlace ya no funciona</h1>
+          <p className="mt-2 text-[15px] text-ink-muted">Expiró o fue revocado. Pide un enlace nuevo a la persona de ACRE que te lo compartió.</p>
+        </div>
+        <Cerro className="pointer-events-none absolute inset-x-0 bottom-0 h-28 w-full sm:h-40" />
       </main>
     );
   }
@@ -26,35 +32,45 @@ export default async function SharedPage({ params }: { params: { token: string }
   const counts = { confirmed: prop.data.filter((d) => d.verificationStatus === "CONFIRMADO" && !d.isDemo).length, demo: prop.data.filter((d) => d.isDemo).length, pending: prop.data.filter((d) => d.verificationStatus === "PENDIENTE").length, unavailable: prop.data.filter((d) => d.verificationStatus === "NO_DISPONIBLE").length, total: prop.data.length };
   const status = expedienteStatus(counts);
   const photos = prop.documents.filter((d) => d.kind === "FOTO"), docs = prop.documents.filter((d) => d.kind === "DOCUMENTO");
+  const address = data.direccion?.value ?? [prop.address, prop.neighborhood, prop.municipality].filter(Boolean).join(", ");
+
   return (
-    <div className="min-h-screen">
-      <header className="sky border-b border-line"><div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-5 sm:px-6">
-        <Logo subtitle="Expediente compartido · solo lectura" />
-        <p className="text-xs text-ink-muted">Acceso válido hasta {formatDate(inv.expiresAt, true)}</p>
-      </div></header>
-      <main className="mx-auto max-w-6xl space-y-6 px-4 py-6 sm:px-6">
-        <div><div className="flex flex-wrap items-center gap-2"><h1 className="page-title">{prop.name}</h1><Badge tone="brand">{prop.code}</Badge><Badge tone={status.key === "completo" ? "green" : status.key === "pendiente" ? "amber" : status.key === "demo" ? "violet" : "slate"}>{status.label}</Badge></div><p className="mt-1 text-sm text-ink-muted">{prop.municipality ?? ""}</p></div>
-        {status.key === "pendiente" && <Alert tone="warn">Este expediente contiene datos pendientes de verificación.</Alert>}
-        {counts.demo > 0 && <Alert tone="info">Los datos marcados como <strong>Demostrativo</strong> son sintéticos y no provienen de fuentes oficiales.</Alert>}
-        <Alert tone="info">Esta plataforma centraliza información territorial verificable para análisis preliminares. No constituye un avalúo ni un dictamen oficial de viabilidad.</Alert>
-        <div className="grid gap-6 xl:grid-cols-[1fr_1.1fr]">
-          <Card title="A. Información general">
-            <DatumRow label="Dirección oficial" datum={data.direccion} />
-            <DatumRow label="Superficie del polígono" datum={data.superficie_m2}><span className="font-display text-2xl font-extrabold tracking-[-0.03em]">{formatArea(prop.areaM2)}</span></DatumRow>
-            <div className="py-3"><p className="text-xs font-medium uppercase tracking-wide text-ink-subtle">Registro</p><p className="mt-0.5 text-sm">{formatDate(prop.createdAt)}</p></div>
-          </Card>
-          <Card title="B. Ubicación geográfica"><PolygonViewer feature={polygon} point={point} radiusM={PROXIMITY_RADIUS_M} height={360} /></Card>
-        </div>
-        <CommercialSection data={data} /><ServicesSection data={data} /><RisksSection data={data} />
-        <Card title="F. Documentos y fotografías autorizados">
-          {prop.documents.length === 0 ? <p className="text-sm text-ink-subtle">Sin archivos compartidos.</p> : (
-            <div className="space-y-4">
-              {photos.length > 0 && <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">{photos.map((p) => <a key={p.id} href={`/api/compartido/${params.token}/documentos/${p.id}?inline=1`} target="_blank" rel="noreferrer" className="overflow-hidden rounded-lg border border-line"><img src={`/api/compartido/${params.token}/documentos/${p.id}?inline=1`} alt={p.filename} className="aspect-[4/3] w-full object-cover" /></a>)}</div>}
-              {docs.length > 0 && <ul className="divide-y divide-line rounded-lg border border-line">{docs.map((d) => <li key={d.id} className="flex items-center justify-between gap-2 px-3 py-2 text-sm"><span className="truncate">{d.filename}</span><a className="btn-secondary px-2.5 py-1" href={`/api/compartido/${params.token}/documentos/${d.id}`}>Descargar</a></li>)}</ul>}
-            </div>
+    <div className="min-h-screen bg-canvas">
+      <section className="sky relative overflow-hidden">
+        <header className="relative z-10 mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-5 sm:px-6">
+          <Logo subtitle="Expediente de terreno" />
+          <span className="rounded-full bg-white/70 px-3.5 py-1.5 text-xs text-ink-muted backdrop-blur">Disponible hasta {formatDate(inv.expiresAt, true)}</span>
+        </header>
+        <div className="relative z-10 mx-auto max-w-6xl px-4 pb-32 pt-8 sm:px-6 sm:pb-40 sm:pt-12">
+          <p className="text-sm font-medium text-brand-700">{prop.municipality ?? "Área Metropolitana de Monterrey"}</p>
+          <h1 className="mt-2 max-w-3xl font-display text-5xl font-black leading-[0.95] tracking-[-0.045em] sm:text-7xl">{prop.name}</h1>
+          <dl className="mt-8 flex flex-wrap gap-x-10 gap-y-4">
+            <div><dt className="text-xs text-ink-muted">Superficie</dt><dd className="font-display text-3xl font-extrabold tracking-[-0.03em]">{formatArea(prop.areaM2)}</dd></div>
+            {address && <div className="max-w-md"><dt className="text-xs text-ink-muted">Ubicación</dt><dd className="mt-1 text-[15px] font-medium">{address}</dd></div>}
+          </dl>
+          {(status.key === "pendiente" || counts.demo > 0) && (
+            <p className="mt-6 inline-block rounded-full bg-white/80 px-4 py-2 text-xs text-ink-muted backdrop-blur">
+              {counts.demo > 0 ? "Incluye datos de demostración que no son oficiales." : "Algunos datos siguen en verificación."}
+            </p>
           )}
-        </Card>
-        <SourcesSection rows={prop.data} />
+        </div>
+        <Cerro className="pointer-events-none absolute inset-x-0 bottom-0 h-24 w-full sm:h-32" tone="white" />
+      </section>
+
+      <main className="mx-auto -mt-2 max-w-6xl space-y-6 px-4 pb-16 sm:px-6">
+        <Card title="Ubicación"><PolygonViewer feature={polygon} point={point} radiusM={PROXIMITY_RADIUS_M} height={420} /></Card>
+        <CommercialSection data={data} pub />
+        <ServicesSection data={data} pub />
+        <RisksSection data={data} pub />
+        {prop.documents.length > 0 && (
+          <Card title="Fotos y documentos">
+            <div className="space-y-4">
+              {photos.length > 0 && <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">{photos.map((p) => <a key={p.id} href={`/api/compartido/${params.token}/documentos/${p.id}?inline=1`} target="_blank" rel="noreferrer" className="overflow-hidden rounded-2xl"><img src={`/api/compartido/${params.token}/documentos/${p.id}?inline=1`} alt={p.filename} className="aspect-[4/3] w-full object-cover transition hover:scale-[1.02]" /></a>)}</div>}
+              {docs.length > 0 && <ul className="divide-y divide-line">{docs.map((d) => <li key={d.id} className="flex items-center justify-between gap-3 py-3 text-sm"><span className="truncate font-medium">{d.filename}</span><a className="btn-secondary px-4 py-2" href={`/api/compartido/${params.token}/documentos/${d.id}`}>Descargar</a></li>)}</ul>}
+            </div>
+          </Card>
+        )}
+        <p className="pt-4 text-center text-xs text-ink-subtle">Información territorial para análisis preliminar. No es un avalúo ni un dictamen oficial. Preparado por ACRE Consulting.</p>
       </main>
     </div>
   );
